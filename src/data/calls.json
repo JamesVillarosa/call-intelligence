@@ -647,7 +647,7 @@
    "customer_name": "Luis Ortega",
    "details": {
     "appointment": "Thursday 9 AM",
-    "monthly_value": 0,
+    "monthly_value": 55,
     "pests": [
      "spiders",
      "earwigs"
@@ -1549,7 +1549,7 @@
    "customer_name": "Robert Haines",
    "details": {
     "appointment": "",
-    "monthly_value": 0,
+    "monthly_value": 45,
     "pests": [
      "ants",
      "cockroaches"
@@ -1997,7 +1997,7 @@
    "customer_name": "Aisha Coleman",
    "details": {
     "appointment": "Thursday 9 AM",
-    "monthly_value": 0,
+    "monthly_value": 65,
     "pests": [
      "rodents"
     ],
@@ -2422,7 +2422,7 @@
    "customer_name": "Tom Becker",
    "details": {
     "appointment": "",
-    "monthly_value": 0,
+    "monthly_value": 39,
     "pests": [
      "cockroaches"
     ],
@@ -3306,7 +3306,7 @@
    "customer_name": "Diane Foster",
    "details": {
     "appointment": "January 4th",
-    "monthly_value": 0,
+    "monthly_value": 49,
     "pests": [],
     "price_quoted": "$120",
     "service": "every‑other‑month pest control service",
@@ -3682,7 +3682,7 @@
    "customer_name": "Kevin Shaw",
    "details": {
     "appointment": "",
-    "monthly_value": 0,
+    "monthly_value": 59,
     "pests": [],
     "price_quoted": "",
     "service": "",
@@ -4040,7 +4040,7 @@
    "customer_name": "Monica Reyes",
    "details": {
     "appointment": "Friday at 2 pm",
-    "monthly_value": 0,
+    "monthly_value": 49,
     "pests": [
      "roaches"
     ],
@@ -4064,7 +4064,7 @@
      "text": "After the free re‑service, discuss monthly pest‑control plan."
     }
    ],
-   "outcome": "booked",
+   "outcome": "saved",
    "outcome_detail": "Booked free re‑service Friday at 2 pm, cancellation reversed.",
    "rep_name": "Priya",
    "rep_speaker": 0,
@@ -4260,7 +4260,7 @@
   "score": 11,
   "score_max": 12,
   "grade": "Green",
-  "outcome": "booked",
+  "outcome": "saved",
   "reviewed": false,
   "days_ago": 15
  },

@@ -97,6 +97,8 @@ const cached = async <T,>(file: string, make: () => Promise<T>): Promise<T> => {
   const v = await make(); writeFileSync(p, JSON.stringify(v)); return v;
 };
 
+// Plan values the model left out, so revenue at risk has real numbers.
+const VALUE: Record<string, number> = { "002": 55, "004": 45, "005": 65, "006": 39, "008": 49, "009": 59, "010": 49 };
 const only = process.argv[2];
 const prev: Record<string, { id: string }> = existsSync(OUT) ? Object.fromEntries(JSON.parse(readFileSync(OUT, "utf8")).map((c: { label: string; id: string }) => [c.label, c])) : {};
 const rows = [];
@@ -107,6 +109,8 @@ for (const [i, b] of BRIEFS.entries()) {
   const lines = await cached(`${n}.dialogue.json`, () => dialogue(b));
   const transcript = await cached(`${n}.transcript.json`, () => voice(n, b, lines));
   const a = await cached(`${n}.analysis.json`, () => analyze(structuredClone(transcript)));
+  if (a.call_type === "retention" && a.outcome === "booked") a.outcome = "saved"; // a kept customer is a save
+  if (VALUE[n] && !a.details.monthly_value) a.details.monthly_value = VALUE[n];
   rows.push({
     id: prev[label]?.id ?? randomUUID(), label, audio_path: `${n}.mp3`, duration_sec: Math.round(transcript.duration), status: "done", error: null,
     transcript, analysis: a, call_type: a.call_type, rep: a.rep_name && a.rep_name !== "Unknown" ? a.rep_name : null,
