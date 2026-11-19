@@ -1,0 +1,119 @@
+@import "tailwindcss";
+
+/* Light only. Fixed scales; components use these or the semantic tokens below, never raw hex. */
+@theme {
+  --color-brand-50: #eef0ff; --color-brand-100: #e0e4ff; --color-brand-200: #c7cdfe; --color-brand-300: #a5b0fc; --color-brand-400: #818cf8;
+  --color-brand-500: #6366f1; --color-brand-600: #4f46e5; --color-brand-700: #4338ca; --color-brand-800: #3730a3; --color-brand-900: #312e81;
+  --color-mint-400: #34d5b1; --color-mint-500: #14b8a6; --color-mint-600: #0d9488; --color-mint-700: #0f766e;
+  --color-n-0: #ffffff; --color-n-25: #fafbfd; --color-n-50: #f6f7fb; --color-n-100: #f2f4f8; --color-n-200: #e4e7ee; --color-n-300: #d5d9e3;
+  --color-n-400: #9aa2b3; --color-n-500: #6b7388; --color-n-600: #4a5266; --color-n-700: #353d50; --color-n-800: #1f2535; --color-n-900: #0f1424;
+
+  /* Meaning colors: one family per meaning. 500 = fills (rings, bars, dots), 50 = tint. */
+  --color-success-50: #ecfdf5; --color-success-100: #d1fae5; --color-success-500: #059669; --color-success-600: #047857; --color-success-700: #065f46;
+  --color-warning-50: #fffbeb; --color-warning-100: #fef3c7; --color-warning-500: #d97706; --color-warning-600: #b45309; --color-warning-700: #92400e;
+  --color-orange-50: #fff4ed; --color-orange-100: #ffe6d5; --color-orange-500: #ea580c; --color-orange-600: #c2410c; --color-orange-700: #9a3412;
+  --color-danger-50: #fff1f2; --color-danger-100: #ffe4e6; --color-danger-500: #e11d48; --color-danger-600: #be123c; --color-danger-700: #9f1239;
+  --color-gold-50: #fef9c3; --color-gold-100: #fef08a; --color-gold-400: #eab308; --color-gold-500: #ca8a04; --color-gold-600: #a16207;
+  --color-info-50: #f1f5f9; --color-info-100: #e2e8f0; --color-info-500: #64748b; --color-info-600: #475569;
+
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-geist), ui-sans-serif, sans-serif;
+
+  --radius-xs: 6px; --radius-sm: 8px; --radius-md: 12px; --radius-lg: 16px; --radius-xl: 20px;
+
+  --shadow-xs: inset 0 1px 0 rgba(255, 255, 255, .9), 0 1px 2px rgba(15, 20, 36, .03), 0 8px 24px -14px rgba(15, 20, 36, .10);
+  --shadow-sm: 0 1px 2px rgba(15, 20, 36, .04);
+  --shadow-md: inset 0 1px 0 rgba(255, 255, 255, .9), 0 2px 4px rgba(15, 20, 36, .03), 0 16px 32px -16px rgba(15, 20, 36, .14);
+  --shadow-lg: 0 12px 32px -8px rgba(15, 20, 36, .16);
+
+  --ease-out: cubic-bezier(.32, .72, 0, 1);
+  --animate-shimmer: shimmer 1.4s linear infinite;
+}
+
+:root {
+  --bg: #f6f7fb; --card: #ffffff; --inset: #f2f4f8; --elevated: #ffffff;
+  --border: #e4e7ee; --border-strong: #d5d9e3;
+  --fg: #0f1424; --fg-2: #4a5266; --fg-3: #5f677b;
+  --brand-fg: #4338ca; --brand-soft: #eef0ff; --brand-line: #c7cdfe;
+  --success-fg: #047857; --success-soft: #ecfdf5;
+  --warning-fg: #b45309; --warning-soft: #fffbeb;
+  --orange-fg: #c2410c; --orange-soft: #fff4ed;
+  --danger-fg: #be123c; --danger-soft: #fff1f2;
+  --info-fg: #475569; --info-soft: #f1f5f9;
+  --gold-fg: #a16207; --gold-soft: #fef9c3;
+  --ring: 0 0 0 3px rgba(79, 70, 229, .25);
+  color-scheme: light;
+}
+
+@theme inline {
+  --color-bg: var(--bg); --color-card: var(--card); --color-inset: var(--inset); --color-elevated: var(--elevated);
+  --color-line: var(--border); --color-line-strong: var(--border-strong);
+  --color-fg: var(--fg); --color-fg-2: var(--fg-2); --color-fg-3: var(--fg-3);
+  --color-brand-fg: var(--brand-fg); --color-brand-soft: var(--brand-soft); --color-brand-line: var(--brand-line);
+  --color-success-fg: var(--success-fg); --color-success-soft: var(--success-soft);
+  --color-warning-fg: var(--warning-fg); --color-warning-soft: var(--warning-soft);
+  --color-orange-fg: var(--orange-fg); --color-orange-soft: var(--orange-soft);
+  --color-danger-fg: var(--danger-fg); --color-danger-soft: var(--danger-soft);
+  --color-info-fg: var(--info-fg); --color-info-soft: var(--info-soft);
+  --color-gold-fg: var(--gold-fg); --color-gold-soft: var(--gold-soft);
+}
+
+html { background: var(--bg); }
+body { min-height: 100dvh; background: var(--bg); color: var(--fg); font-size: 14px; line-height: 20px; -webkit-font-smoothing: antialiased; }
+h1, h2, h3 { text-wrap: balance; }
+p { text-wrap: pretty; }
+::selection { background: rgba(79, 70, 229, .18); }
+:focus-visible { outline: none; box-shadow: var(--ring); border-radius: 8px; }
+svg.lucide[stroke-width="2"] { stroke-width: 1.6; }
+* { scrollbar-width: thin; scrollbar-color: var(--border-strong) transparent; }
+
+@utility t-display { font-size: 44px; line-height: 48px; font-weight: 650; letter-spacing: -0.03em; }
+@utility t-h1 { font-size: 28px; line-height: 34px; font-weight: 650; letter-spacing: -0.02em; }
+@utility t-h2 { font-size: 22px; line-height: 28px; font-weight: 650; letter-spacing: -0.015em; }
+@utility t-h3 { font-size: 16px; line-height: 24px; font-weight: 600; letter-spacing: -0.01em; }
+@utility t-body { font-size: 15px; line-height: 22px; }
+@utility t-small { font-size: 14px; line-height: 20px; }
+@utility t-label { font-size: 13px; line-height: 18px; font-weight: 550; }
+@utility t-caption { font-size: 13px; line-height: 18px; font-weight: 500; }
+@utility t-th { font-size: 12px; line-height: 16px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
+@utility num { font-variant-numeric: tabular-nums; font-feature-settings: "tnum", "cv11"; }
+
+/* Motion. Every animation here has a reduced-motion fallback at the bottom. */
+@keyframes shimmer { to { background-position: -200% 0; } }
+@keyframes rise { from { opacity: 0; transform: translateY(12px); } }
+@keyframes grow { from { transform: scaleX(0); } }
+@keyframes grow-y { from { transform: scaleY(0); } }
+@keyframes ring { from { stroke-dashoffset: var(--c); } }
+@keyframes pop { 0% { transform: scale(.5); opacity: 0; } 60% { transform: scale(1.12); opacity: 1; } 100% { transform: scale(1); } }
+@keyframes pulse-dot { 50% { opacity: .35; } }
+@keyframes wave { 0%, 100% { transform: scaleY(.45); } 50% { transform: scaleY(1); } }
+
+.rise { animation: rise 520ms var(--ease-out) backwards; animation-delay: calc(var(--i, 0) * 30ms); }
+.grow { transform-origin: left; animation: grow 800ms var(--ease-out) backwards; animation-delay: calc(120ms + var(--i, 0) * 40ms); }
+.grow-y { transform-origin: bottom; animation: grow-y 800ms var(--ease-out) backwards; animation-delay: calc(120ms + var(--i, 0) * 25ms); }
+.ring-fill { animation: ring 800ms var(--ease-out) backwards; animation-delay: 120ms; }
+.pop { animation: pop 360ms var(--ease-out); }
+.pulse-dot { animation: pulse-dot 1.2s ease-in-out infinite; }
+.wave-bar { transform-origin: center; animation: wave 1.1s ease-in-out infinite; animation-delay: calc(var(--i, 0) * 120ms); }
+.skeleton { background: linear-gradient(90deg, var(--inset) 25%, var(--card) 50%, var(--inset) 75%); background-size: 200% 100%; animation: var(--animate-shimmer); border-radius: 8px; }
+.lift { transition: transform 200ms var(--ease-out), box-shadow 200ms var(--ease-out), border-color 200ms ease; }
+@media (hover: hover) and (pointer: fine) { .lift:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); } }
+.press { transition: transform 120ms var(--ease-out); }
+.press:active { transform: scale(.97); }
+.fold { display: grid; grid-template-rows: 1fr; transition: grid-template-rows 360ms var(--ease-out), opacity 200ms ease; }
+.fold > * { min-height: 0; overflow: hidden; }
+.fold[data-gone="true"] { grid-template-rows: 0fr; opacity: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .rise, .grow, .grow-y, .ring-fill, .pop, .pulse-dot, .wave-bar, .skeleton { animation: none !important; }
+  .lift:hover, .press:active { transform: none !important; }
+  .fold { transition: opacity 150ms ease; }
+}
+
+@keyframes fade { from { opacity: 0; } }
+@keyframes dialog { from { opacity: 0; transform: translate(-50%, -48%) scale(.97); } }
+@keyframes sheet-r { from { transform: translateX(100%); } }
+@keyframes sheet-l { from { transform: translateX(-100%); } }
+@media (prefers-reduced-motion: reduce) { [data-state=open] { animation: none !important; } }
+
+.static *, .static *::before, .static *::after { animation: none !important; transition: none !important; }
