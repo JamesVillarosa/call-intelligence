@@ -77,7 +77,7 @@ export function UploadDialog() {
 
   const busy = jobs.some((j) => j.stage !== "done" && !j.error);
   return (
-    <Dialog open={open} onOpenChange={(o) => { setOpen(o); if (!o && !busy) setJobs([]); }} title="Upload a call" description="Drop a recording. It's transcribed, classified and scored against your call manuals." wide>
+    <Dialog open={open} onOpenChange={(o) => { setOpen(o); if (!o && !busy) setJobs([]); }} title="Upload a call" description="Drop any recording to watch it get transcribed, classified and scored. Demo: your file stays in your browser and is scored with one of the sample calls." wide>
       <input ref={input} type="file" accept="audio/*" multiple hidden onChange={(e) => { pick(e.target.files); e.target.value = ""; }} />
       <button
         onClick={() => input.current?.click()}
