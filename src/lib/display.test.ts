@@ -12,6 +12,7 @@ describe("band", () => {
     expect(band(null, null, null)).toBe("none");
     expect(bandOfPct(41)).toBe("critical");
     expect(bandOfPct(60)).toBe("work");
+    expect(bandOfPct(90)).toBe("green");
   });
 });
 

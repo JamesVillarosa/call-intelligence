@@ -15,7 +15,8 @@ export function band(grade?: string | null, score?: number | null, max?: number 
 export const BAND_LABEL: Record<Band, string> = { gold: "Gold", green: "Green", close: "Close to green", work: "Needs work", critical: "Critical", none: "Not scored" };
 // Rates (pillar hit rates, booking rates) are not scores: 100% is green, not gold.
 export const bandOfRate = (p: number | null): Band => (p == null ? "none" : p >= 80 ? "green" : p >= 60 ? "close" : p >= 40 ? "work" : "critical");
-export const bandOfPct = (p: number | null): Band => (p == null ? "none" : p >= 100 ? "gold" : p >= 75 ? "close" : p >= 45 ? "work" : "critical");
+// Averages: green sits between the scorecards' own cutoffs (sales 14/17 = 82%, office and retention 11/12 = 92%).
+export const bandOfPct = (p: number | null): Band => (p == null ? "none" : p >= 100 ? "gold" : p >= 85 ? "green" : p >= 75 ? "close" : p >= 45 ? "work" : "critical");
 
 type Summary = {
   done: number; sales: number; booked: number; retention: number; saved: number; failed: number; atRisk: number;
