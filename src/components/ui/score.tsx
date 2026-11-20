@@ -14,7 +14,7 @@ export function ScoreRing({ value, max, band, size = 40, stroke, label, sub }: {
       <span className="relative grid place-items-center" style={{ width: size, height: size }}>
         <svg width={size} height={size} className="-rotate-90" aria-hidden>
           <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="var(--inset)" strokeWidth={w} />
-          <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke={BAND_COLOR[band]} strokeWidth={w} strokeLinecap="round" strokeDasharray={c} strokeDashoffset={c * (1 - Math.max(p, 0.02))} className="ring-fill" style={{ ["--c" as string]: c, filter: size >= 120 ? `drop-shadow(0 0 6px ${BAND_COLOR[band]})` : undefined }} />
+          <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke={BAND_COLOR[band]} strokeWidth={w} strokeLinecap="round" strokeDasharray={c} strokeDashoffset={c * (1 - Math.max(p, 0.02))} className="ring-fill" style={{ ["--c" as string]: c }} />
         </svg>
         {label != null && <span className="t-plate absolute leading-none text-fg" style={{ fontSize: Math.max(10, Math.round(size * (String(label).length > 4 ? 0.2 : 0.26))) }}>{label}</span>}
       </span>

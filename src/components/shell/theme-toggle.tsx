@@ -4,9 +4,9 @@ import { useSyncExternalStore } from "react";
 
 const watch = (cb: () => void) => { const o = new MutationObserver(cb); o.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] }); return () => o.disconnect(); };
 
-// Light is the default; the choice is saved per browser. Transitions are paused for one frame so the flip is instant.
+// Dark is the default; the choice is saved per browser. Transitions are paused for one frame so the flip is instant.
 export function ThemeToggle() {
-  const dark = useSyncExternalStore(watch, () => document.documentElement.classList.contains("dark"), () => false);
+  const dark = useSyncExternalStore(watch, () => document.documentElement.classList.contains("dark"), () => true);
   const flip = () => {
     const el = document.documentElement, next = !dark;
     el.classList.add("theming");

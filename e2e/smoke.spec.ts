@@ -47,17 +47,17 @@ test("upload dialog opens from the keyboard and validates file type", async ({ p
   await expect(page.getByRole("alert")).toContainText("isn't an audio file");
 });
 
-test("command palette finds pages; ? opens shortcuts; light by default, dark on toggle", async ({ page }) => {
+test("command palette finds pages; ? opens shortcuts; dark by default, light on toggle", async ({ page }) => {
   await page.emulateMedia({ colorScheme: "dark" });
   await page.goto("/");
   await page.waitForLoadState("networkidle");
   const bg = () => page.evaluate(() => getComputedStyle(document.documentElement).backgroundColor);
-  expect(await bg()).toBe("rgb(243, 246, 253)");
-  await page.getByRole("button", { name: "Switch to dark mode" }).click();
-  expect(await bg()).toBe("rgb(6, 11, 38)");
-  await page.reload();
   expect(await bg()).toBe("rgb(6, 11, 38)");
   await page.getByRole("button", { name: "Switch to light mode" }).click();
+  expect(await bg()).toBe("rgb(243, 246, 253)");
+  await page.reload();
+  expect(await bg()).toBe("rgb(243, 246, 253)");
+  await page.getByRole("button", { name: "Switch to dark mode" }).click();
   await page.keyboard.press("Shift+Slash");
   await expect(page.getByRole("dialog", { name: "Keyboard shortcuts" })).toBeVisible();
   await page.keyboard.press("Escape");
