@@ -123,7 +123,7 @@ export function CallDetail({ call, prev, next, index, total }: { call: CallRow; 
           <div className="mt-3 flex flex-wrap items-center gap-2">
             {a && <TypeChip type={a.call_type} />}
             {a && <Badge size="md"><Outcome outcome={a.outcome} /></Badge>}
-            <Menu align="start" label="Rep" trigger={<button className="press t-small inline-flex h-7 items-center gap-2 rounded-full border border-line bg-card pl-1 pr-3 hover:bg-inset"><Avatar name={call.rep} kind={call.rep ? "rep" : "unknown"} size={22} />{call.rep ?? "Rep unknown"}</button>}
+            <Menu align="start" label="Rep" trigger={<button className="press t-small inline-flex h-7 items-center gap-2 rounded-xs border border-line bg-card pl-1 pr-3 hover:bg-inset"><Avatar name={call.rep} kind={call.rep ? "rep" : "unknown"} size={22} />{call.rep ?? "Rep unknown"}</button>}
               items={[{ label: `Assign follow-up to ${call.rep ?? "rep"}`, onSelect: () => call.rep && update({ assignee: call.rep }, `Assigned to ${call.rep}`) }, { label: "Assign follow-up to Office", onSelect: () => update({ assignee: "Office" }, "Assigned to Office") }]} />
             <Badge size="md"><span className="num">{mmss(duration)}</span></Badge>
             <Badge size="md">{new Date(call.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</Badge>
@@ -155,7 +155,7 @@ export function CallDetail({ call, prev, next, index, total }: { call: CallRow; 
       {call.status !== "done" && (
         <Card className={cn("mt-6 flex items-center gap-3 p-4", call.status === "error" && "border-danger-500/40 bg-danger-soft")}>
           {call.status === "error" ? <><TriangleAlert className="size-5 text-danger-fg" /><p className="t-small flex-1"><b>Processing didn&rsquo;t finish.</b> {call.error}</p><Button size="sm" onClick={rerun} loading={busy}>Retry</Button></>
-            : <><span className="pulse-dot size-2.5 rounded-full bg-brand-500" /><p className="t-small font-medium">{STATUS_LABEL[call.status]}. This page fills in by itself.</p></>}
+            : <><span className="pulse-dot size-2.5 rounded-xs bg-brand-500" /><p className="t-small font-medium">{STATUS_LABEL[call.status]}. This page fills in by itself.</p></>}
         </Card>
       )}
 
@@ -174,7 +174,7 @@ export function CallDetail({ call, prev, next, index, total }: { call: CallRow; 
                 {(a.details?.monthly_value ?? 0) > 0 && <Badge size="lg" tone="warning"><span className="num">{money((a.details!.monthly_value ?? 0) * 12)}/yr value</span></Badge>}
                 {a.details?.wins?.length ? <Badge size="lg" tone="mint">Cares about: {a.details.wins.join(", ")}</Badge> : null}
               </div>
-              {a.follow_up?.needed && <p className="t-small mt-4 rounded-md border border-warning-500/30 bg-warning-soft p-3"><b className="text-warning-fg">Next step{a.follow_up.urgency === "today" ? ", due today" : ""}: </b>{a.follow_up.action}</p>}
+              {a.follow_up?.needed && <p className="t-small mt-4 rounded-md border border-line-strong p-3"><b className="text-fg">Next step{a.follow_up.urgency === "today" ? ", due today" : ""}: </b>{a.follow_up.action}</p>}
             </Card>
           )}
           <Card className="rise p-5 sm:p-6" style={{ ["--i" as string]: 1 }}>

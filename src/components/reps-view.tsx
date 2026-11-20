@@ -62,7 +62,7 @@ function TeamAverage({ calls }: { calls: CallLite[] }) {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center gap-4">
-        <span className="grid size-14 place-items-center rounded-full bg-inset text-[13px] font-semibold text-fg-2">Team</span>
+        <span className="grid size-14 place-items-center rounded-xs bg-inset text-[13px] font-semibold text-fg-2">Team</span>
         <div className="min-w-0 flex-1"><h2 className="t-h2">Team average, all reps</h2><p className="t-small text-fg-2"><span className="num">{s.scored}</span> scored calls across <span className="num">{s.team.length}</span> reps</p></div>
         {s.avgScore != null && <ScoreRing value={s.avgScore} max={100} band={bandOfPct(s.avgScore)} size={64} label={`${s.avgScore}%`} />}
       </div>

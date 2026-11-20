@@ -32,7 +32,7 @@ export function RepProfile({ calls, name }: { calls: CallLite[]; name: string; c
               <div className="t-small mb-1.5 flex justify-between"><span>{p.name}</span><span className="num text-fg-2">{p.rate ?? 0}% <span className="text-fg-3">vs {p.team ?? 0}%</span></span></div>
               <span className="relative block">
                 <ScoreBar value={p.rate ?? 0} band={bandOfRate(p.rate)} i={i} />
-                {p.team != null && <span className="absolute -top-1 h-3.5 w-0.5 rounded-full bg-fg" style={{ left: `${p.team}%` }} aria-hidden />}
+                {p.team != null && <span className="absolute -top-1 h-3.5 w-0.5 rounded-xs bg-fg" style={{ left: `${p.team}%` }} aria-hidden />}
               </span>
             </li>
           ))}
@@ -48,7 +48,7 @@ export function RepProfile({ calls, name }: { calls: CallLite[]; name: string; c
         <section className="rounded-md border border-brand-line bg-brand-soft/60 p-4">
           <h3 className="t-label text-brand-fg">Suggested 1-on-1 plan</h3>
           <ol className="mt-2 flex flex-col gap-2.5">
-            {r.plan.map((p, i) => <li key={p.step} className="t-small flex gap-2.5"><span className="num grid size-5 shrink-0 place-items-center rounded-full bg-brand-600 text-[11px] font-semibold text-white">{i + 1}</span><span><span className="font-medium">{p.step}.</span> <span className="text-fg-2">Practice: &ldquo;{p.say}&rdquo;</span></span></li>)}
+            {r.plan.map((p, i) => <li key={p.step} className="t-small flex gap-2.5"><span className="num grid size-5 shrink-0 place-items-center rounded-xs bg-brand-600 text-[11px] font-semibold text-white">{i + 1}</span><span><span className="font-medium">{p.step}.</span> <span className="text-fg-2">Practice: &ldquo;{p.say}&rdquo;</span></span></li>)}
           </ol>
         </section>
       )}

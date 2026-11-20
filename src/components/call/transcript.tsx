@@ -74,7 +74,7 @@ export function Transcript({ lines, isRep, repName, steps, active, follow, onSee
                     <p className="t-body select-text text-fg">{mark(u.text)}</p>
                     {tagged.get(i) && <div className="mt-2 flex flex-wrap gap-1.5">{tagged.get(i)!.map((s) => <StepPill key={s.key} label={s.label} passed onClick={() => onStep(s.key)} />)}</div>}
                   </div>
-                  <button onClick={() => onSeek(i)} className="num t-caption h-6 shrink-0 rounded-full bg-inset px-2 text-fg-2 hover:bg-brand-soft hover:text-brand-fg" aria-label={`Play from ${mmss(u.start)}`}>{mmss(u.start)}</button>
+                  <button onClick={() => onSeek(i)} className="num t-caption h-6 shrink-0 rounded-xs bg-inset px-2 text-fg-2 hover:bg-brand-soft hover:text-brand-fg" aria-label={`Play from ${mmss(u.start)}`}>{mmss(u.start)}</button>
                 </div>
               </li>
             );

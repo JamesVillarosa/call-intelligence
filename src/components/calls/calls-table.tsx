@@ -176,13 +176,13 @@ export function CallsTable({ rows }: { rows: Row[] }) {
         {(views.length > 0 || chips.length > 0) && (
           <div className="flex flex-wrap items-center gap-2">
             {views.map((vw) => (
-              <span key={vw.name} className="inline-flex items-center rounded-full border border-brand-line bg-brand-soft text-[13px] font-medium text-brand-fg">
+              <span key={vw.name} className="inline-flex items-center rounded-xs border border-brand-line bg-brand-soft text-[13px] font-medium text-brand-fg">
                 <button onClick={() => router.replace(`${path}?${vw.query}`, { scroll: false })} className="flex items-center gap-1.5 py-1 pl-3"><Bookmark className="size-3.5" />{vw.name}</button>
                 <button aria-label={`Delete view ${vw.name}`} onClick={() => { const n = views.filter((x) => x !== vw); setViews(n); localStorage.setItem(VIEWS, JSON.stringify(n)); }} className="px-2 py-1 opacity-60 hover:opacity-100"><X className="size-3.5" /></button>
               </span>
             ))}
             {chips.map(([k, label, patch]) => (
-              <button key={k} onClick={() => { if ("q" in patch) setQ(""); set(patch); }} className="press inline-flex h-7 items-center gap-1.5 rounded-full bg-inset pl-3 pr-2 text-[13px] font-medium text-fg-2 hover:text-fg">{label}<X className="size-3.5" /></button>
+              <button key={k} onClick={() => { if ("q" in patch) setQ(""); set(patch); }} className="press inline-flex h-7 items-center gap-1.5 rounded-xs bg-inset pl-3 pr-2 text-[13px] font-medium text-fg-2 hover:text-fg">{label}<X className="size-3.5" /></button>
             ))}
             {chips.length > 0 && <button onClick={clearAll} className="t-label px-1 text-brand-fg hover:underline">Clear all</button>}
           </div>
@@ -232,7 +232,7 @@ export function CallsTable({ rows }: { rows: Row[] }) {
                         {show("outcome") && <td className={cn("px-3", pad)}>{failed ? <span className="t-small text-fg-3">None</span> : <Outcome outcome={r.outcome} />}</td>}
                         {show("score") && <td className={cn("px-3", pad)}>{working ? <span className="t-small pulse-dot text-brand-fg">{(r.duration_sec ?? 0) > 600 ? "Long call, about 2 min" : STATUS_LABEL[r.status]}</span> : failed ? <Button size="sm" onClick={() => rescore([r.id])} disabled={busy}><RefreshCw />Retry</Button> : r.score_max ? (
                           <Tooltip content={`${r.score} of ${r.score_max} points on the ${r.scorecard ?? "scorecard"}`}>
-                            <span className="flex items-center gap-2.5"><ScoreRing value={r.score ?? 0} max={r.score_max} band={b} size={32} /><span className="leading-tight"><span className="num t-small block font-semibold">{Math.round(((r.score ?? 0) / r.score_max) * 100)}%</span><span className="t-caption flex items-center gap-1 whitespace-nowrap text-fg-2"><span className="size-1.5 rounded-full" style={{ background: BAND_COLOR[b] }} />{BAND_LABEL[b]}</span></span></span>
+                            <span className="flex items-center gap-2.5"><ScoreRing value={r.score ?? 0} max={r.score_max} band={b} size={32} /><span className="leading-tight"><span className="num t-small block font-semibold">{Math.round(((r.score ?? 0) / r.score_max) * 100)}%</span><span className="t-caption flex items-center gap-1 whitespace-nowrap text-fg-2"><span className="size-1.5 rounded-xs" style={{ background: BAND_COLOR[b] }} />{BAND_LABEL[b]}</span></span></span>
                           </Tooltip>
                         ) : <span className="t-small text-fg-3">Not scorable</span>}</td>}
                         {show("length") && <td className={cn("num t-small px-3 text-right text-fg-2", pad)}>{mmss(r.duration_sec)}</td>}

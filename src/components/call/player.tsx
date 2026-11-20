@@ -53,16 +53,16 @@ export function Player({ src, id, duration, now, playing, ctl, markers, talk, re
   return (
     <div>
       <div className="flex items-center gap-3">
-        <button onClick={toggle} aria-label={playing ? "Pause" : "Play"} className="press grid size-12 shrink-0 place-items-center rounded-full bg-brand-600 text-white shadow-xs hover:bg-brand-700">
+        <button onClick={toggle} aria-label={playing ? "Pause" : "Play"} className="press grid size-12 shrink-0 place-items-center rounded-full bg-grad text-white glow hover:brightness-110">
           {playing ? <Pause className="size-5" fill="currentColor" /> : <Play className="ml-0.5 size-5" fill="currentColor" />}
         </button>
-        <button onClick={() => seek(now - 10)} aria-label="Back 10 seconds" className="press grid size-9 place-items-center rounded-sm text-fg-2 hover:bg-inset hover:text-fg"><RotateCcw className="size-4" /></button>
-        <button onClick={() => seek(now + 10)} aria-label="Forward 10 seconds" className="press grid size-9 place-items-center rounded-sm text-fg-2 hover:bg-inset hover:text-fg"><RotateCw className="size-4" /></button>
+        <button onClick={() => seek(now - 10)} aria-label="Back 10 seconds" className="press grid size-9 place-items-center rounded-full text-fg-2 hover:bg-inset hover:text-fg"><RotateCcw className="size-4" /></button>
+        <button onClick={() => seek(now + 10)} aria-label="Forward 10 seconds" className="press grid size-9 place-items-center rounded-full text-fg-2 hover:bg-inset hover:text-fg"><RotateCw className="size-4" /></button>
         <span className="num t-small text-fg-2"><span className="font-semibold text-fg">{mmss(now)}</span> / {mmss(duration)}</span>
         <div className="ml-auto flex items-center gap-1">
-          <Menu label="Playback speed" trigger={<button className="press num h-8 rounded-sm border border-line px-2.5 text-[13px] font-medium hover:bg-inset">{rate}×</button>}
+          <Menu label="Playback speed" trigger={<button className="press num h-8 rounded-full border border-line px-3 text-[13px] font-medium hover:bg-inset">{rate}×</button>}
             items={[0.75, 1, 1.25, 1.5, 2].map((r) => ({ label: `${r}×${r === rate ? " (current)" : ""}`, onSelect: () => { setRate(r); ctl.rate(r); } }))} />
-          <button onClick={() => { const m = !muted; setMuted(m); ctl.volume(vol, m); }} aria-label={muted ? "Unmute" : "Mute"} className="press grid size-9 place-items-center rounded-sm text-fg-2 hover:bg-inset hover:text-fg">{muted ? <VolumeX className="size-4" /> : <Volume2 className="size-4" />}</button>
+          <button onClick={() => { const m = !muted; setMuted(m); ctl.volume(vol, m); }} aria-label={muted ? "Unmute" : "Mute"} className="press grid size-9 place-items-center rounded-full text-fg-2 hover:bg-inset hover:text-fg">{muted ? <VolumeX className="size-4" /> : <Volume2 className="size-4" />}</button>
           <input type="range" min={0} max={1} step={0.05} value={muted ? 0 : vol} aria-label="Volume" onChange={(e) => { const v = +e.target.value; setVol(v); setMuted(v === 0); ctl.volume(v, v === 0); }} className="hidden w-20 accent-brand-600 sm:block" />
         </div>
       </div>
@@ -77,14 +77,14 @@ export function Player({ src, id, duration, now, playing, ctl, markers, talk, re
       >
         {!peaks && <span className="skeleton absolute inset-0 rounded-sm" aria-hidden />}
         <svg width="100%" height="64" viewBox={`0 0 ${BARS * 4} 64`} preserveAspectRatio="none" aria-hidden className={peaks ? "absolute inset-0" : "hidden"}>
-          <defs><linearGradient id="played" x1="0" x2="1"><stop stopColor="#4f46e5" /><stop offset="1" stopColor="#4f46e5" /></linearGradient></defs>
+          <defs><linearGradient id="played" x1="0" x2={BARS * 4} gradientUnits="userSpaceOnUse"><stop stopColor="var(--chart-3)" /><stop offset=".5" stopColor="var(--chart-1)" /><stop offset="1" stopColor="var(--chart-2)" /></linearGradient></defs>
           {(peaks ?? []).map((v, i) => {
             const h = Math.max(6, v * 60);
-            return <rect key={i} x={i * 4} y={(64 - h) / 2} width="2.6" height={h} rx="1.3" fill={now > 0 && i / BARS < p ? "url(#played)" : "#c4c9d4"} className="grow-y" style={{ ["--i" as string]: i % 30 }} />;
+            return <rect key={i} x={i * 4} y={(64 - h) / 2} width="2.6" height={h} rx="1.3" fill={now > 0 && i / BARS < p ? "url(#played)" : "var(--chart-6)"} className="grow-y" style={{ ["--i" as string]: i % 30 }} />;
           })}
         </svg>
-        {now > 0 && <span className="pointer-events-none absolute inset-y-0 w-0.5 rounded-full bg-fg" style={{ left: `${p * 100}%` }} aria-hidden />}
-        {hover != null && <span className="num t-caption pointer-events-none absolute -top-7 -translate-x-1/2 rounded-xs bg-n-900 px-1.5 py-0.5 text-white" style={{ left: `${(hover / (duration || 1)) * 100}%` }}>{mmss(hover)}</span>}
+        {now > 0 && <span className="pointer-events-none absolute inset-y-0 w-0.5 rounded-full bg-brand-500" style={{ left: `${p * 100}%` }} aria-hidden />}
+        {hover != null && <span className="num t-caption pointer-events-none absolute -top-7 -translate-x-1/2 rounded-sm bg-[#0f1535] px-1.5 py-0.5 text-white" style={{ left: `${(hover / (duration || 1)) * 100}%` }}>{mmss(hover)}</span>}
       </div>
         {markers.map((m, i) => (
           <Tooltip key={i} content={<span><b>{m.label}</b>{m.quote && <><br />&ldquo;{m.quote}&rdquo;</>}</span>}>
@@ -97,12 +97,12 @@ export function Player({ src, id, duration, now, playing, ctl, markers, talk, re
         <span className="flex items-center gap-1.5"><span className="size-2 rounded-full bg-success-500" />Step hit</span>
         {markers.some((m) => !m.passed) && <span className="flex items-center gap-1.5"><span className="size-2 rounded-full bg-danger-500" />Step missed, where coaching says it belonged</span>}
         {!real && peaks && <span>Waveform shape is approximate for this recording.</span>}
-        <Tooltip content="Space plays or pauses. Left and right arrows seek 5 seconds, with Shift 15."><button type="button" className="ml-auto grid size-6 place-items-center rounded-full border border-line text-[12px] font-semibold text-fg-2 hover:bg-inset" aria-label="Player keyboard shortcuts">?</button></Tooltip>
+        <Tooltip content="Space plays or pauses. Left and right arrows seek 5 seconds, with Shift 15."><button type="button" className="ml-auto grid size-6 place-items-center rounded-xs border border-line text-[12px] font-semibold text-fg-2 hover:bg-inset" aria-label="Player keyboard shortcuts">?</button></Tooltip>
       </p>
       {talk && (
         <div className="mt-4">
           <div className="t-caption mb-1.5 flex justify-between text-fg-2"><span>Talk time: <b className="text-fg">{repName}</b> <span className="num">{talk.rep}%</span></span><span>Customer <span className="num">{talk.customer}%</span></span></div>
-          <div className="flex h-2 overflow-hidden rounded-full bg-inset" role="img" aria-label={`${repName} talked ${talk.rep} percent, customer ${talk.customer} percent`}>
+          <div className="flex h-2 overflow-hidden rounded-xs bg-inset" role="img" aria-label={`${repName} talked ${talk.rep} percent, customer ${talk.customer} percent`}>
             <span className="grow h-full bg-brand-500" style={{ width: `${talk.rep}%` }} /><span className="h-full flex-1 bg-n-300" />
           </div>
         </div>

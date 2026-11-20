@@ -40,16 +40,16 @@ export function ScorecardPanel({ call, a, card, lines, onSeek, focus }: { call: 
           <p className="t-small text-fg-2"><span className="num font-semibold text-fg">{call.score}</span> of {max} points</p>
           {/* Labeled thresholds: Below, Green, Gold, with this call's position. */}
           <div className="mt-3" role="img" aria-label={`${call.score} of ${max}. Green from ${card.green}, Gold at ${card.gold}.`}>
-            <div className="relative flex h-2.5 gap-0.5 overflow-visible">
-              <span className="h-full rounded-l-full bg-danger-100" style={{ width: `${((card.green - 1) / max) * 100}%` }} />
-              <span className="h-full bg-success-100" style={{ width: `${((card.gold - card.green) / max) * 100}%` }} />
-              <span className="h-full flex-1 rounded-r-full bg-gold-50 ring-1 ring-inset ring-gold-400/40" />
-              <span className="absolute top-1/2 size-4 -translate-x-1/2 -translate-y-1/2 rounded-full ring-2 ring-card" style={{ left: `${Math.min(((call.score ?? 0) / max) * 100, 98)}%`, background: BAND_COLOR[b] }} />
+            <div className="relative flex h-1 gap-[2px] overflow-visible">
+              <span className="h-full bg-n-300" style={{ width: `${((card.green - 1) / max) * 100}%` }} />
+              <span className="h-full bg-success-500" style={{ width: `${((card.gold - card.green) / max) * 100}%` }} />
+              <span className="h-full flex-1 bg-gold-400" />
+              <span className="absolute top-1/2 h-4 w-[3px] -translate-x-1/2 -translate-y-1/2 ring-2 ring-card" style={{ left: `${Math.min(((call.score ?? 0) / max) * 100, 98)}%`, background: BAND_COLOR[b] }} />
             </div>
             <div className="t-caption mt-2 flex flex-wrap gap-x-3 text-fg-2">
-              <span className="flex items-center gap-1"><span className="size-2 rounded-full bg-danger-100 ring-1 ring-danger-500/30" />Below, under {card.green}</span>
-              <span className="flex items-center gap-1"><span className="size-2 rounded-full bg-success-100 ring-1 ring-success-500/30" />Green {card.green}+</span>
-              <span className="flex items-center gap-1"><span className="size-2 rounded-full bg-gold-50 ring-1 ring-gold-400/50" />Gold {card.gold}</span>
+              <span className="flex items-center gap-1"><span className="size-2 bg-n-300" />Below, under {card.green}</span>
+              <span className="flex items-center gap-1"><span className="size-2 bg-success-500" />Green {card.green}+</span>
+              <span className="flex items-center gap-1"><span className="size-2 bg-gold-400" />Gold {card.gold}</span>
             </div>
           </div>
         </div>
@@ -88,19 +88,19 @@ export function ScorecardPanel({ call, a, card, lines, onSeek, focus }: { call: 
                 return (
                   <li key={s.key} id={`step-${s.key}`} className={cn("scroll-mt-24 rounded-md px-2 py-3 transition-shadow", focus === s.key && "bg-brand-soft shadow-[var(--ring)]")}>
                     <div className="flex items-start gap-3">
-                      <span className={cn("mt-0.5 grid size-5 shrink-0 place-items-center rounded-full", s.passed ? "bg-success-500 text-white" : "bg-warning-soft text-warning-fg ring-1 ring-warning-500/40")}>{s.passed ? <Check className="size-3" strokeWidth={3} /> : <span className="text-[12px] font-bold leading-none">!</span>}</span>
+                      <span className={cn("mt-0.5 grid size-5 shrink-0 place-items-center rounded-xs", s.passed ? "bg-success-500 text-white" : "bg-warning-soft text-warning-fg ring-1 ring-warning-500/40")}>{s.passed ? <Check className="size-3" strokeWidth={3} /> : <span className="text-[12px] font-bold leading-none">!</span>}</span>
                       <div className="min-w-0 flex-1">
                         <div className="flex flex-wrap items-center gap-1.5">
                           <span className="t-label">{s.label}</span>
-                          <Tooltip content={definition(card, s.key)}><button type="button" className="-m-1.5 grid size-6 place-items-center rounded-full text-fg-3 hover:bg-inset hover:text-fg-2" aria-label={`Why ${s.label} matters: ${definition(card, s.key)}`}><Info className="size-3.5" /></button></Tooltip>
+                          <Tooltip content={definition(card, s.key)}><button type="button" className="-m-1.5 grid size-6 place-items-center rounded-xs text-fg-3 hover:bg-inset hover:text-fg-2" aria-label={`Why ${s.label} matters: ${definition(card, s.key)}`}><Info className="size-3.5" /></button></Tooltip>
                           {s.auto ? <Badge size="sm">Rule applied</Badge> : s.passed ? (s.verified ? <Badge size="sm" tone="success">Quote verified</Badge> : <Badge size="sm" tone="warning">Unverified</Badge>) : <Badge size="sm">No evidence</Badge>}
                           {flagged && <Badge size="sm" tone="info" icon={<Flag />}>Flagged</Badge>}
                         </div>
                         <p className="t-small mt-1 text-fg-2">{s.quote ? <i>&ldquo;{s.quote}&rdquo;</i> : <>Not found. {s.note}</>}</p>
                         <div className="mt-2 flex flex-wrap items-center gap-1.5">
-                          {s.utterance >= 0 && lines[s.utterance] && <button onClick={() => onSeek(s.utterance)} className="num t-caption inline-flex h-6 items-center gap-1 rounded-full bg-inset px-2 text-fg-2 hover:bg-brand-soft hover:text-brand-fg"><Play className="size-3" />{mmss(lines[s.utterance].start)}</button>}
-                          {!s.passed && <button onClick={() => setOpen(isOpen ? null : s.key)} aria-expanded={isOpen} className="t-caption inline-flex h-6 items-center gap-1 rounded-full px-2 text-brand-fg hover:bg-brand-soft">Try this<ChevronDown className={cn("size-3.5 transition-transform", isOpen && "rotate-180")} /></button>}
-                          <button onClick={() => flag(s)} className="t-caption ml-auto inline-flex h-6 items-center gap-1 rounded-full px-2 text-fg-3 hover:bg-inset hover:text-fg"><Flag className="size-3" />{flagged ? "Unflag" : "Flag as wrong"}</button>
+                          {s.utterance >= 0 && lines[s.utterance] && <button onClick={() => onSeek(s.utterance)} className="num t-caption inline-flex h-6 items-center gap-1 rounded-xs bg-inset px-2 text-fg-2 hover:bg-brand-soft hover:text-brand-fg"><Play className="size-3" />{mmss(lines[s.utterance].start)}</button>}
+                          {!s.passed && <button onClick={() => setOpen(isOpen ? null : s.key)} aria-expanded={isOpen} className="t-caption inline-flex h-6 items-center gap-1 rounded-xs px-2 text-brand-fg hover:bg-brand-soft">Try this<ChevronDown className={cn("size-3.5 transition-transform", isOpen && "rotate-180")} /></button>}
+                          <button onClick={() => flag(s)} className="t-caption ml-auto inline-flex h-6 items-center gap-1 rounded-xs px-2 text-fg-3 hover:bg-inset hover:text-fg"><Flag className="size-3" />{flagged ? "Unflag" : "Flag as wrong"}</button>
                         </div>
                         {isOpen && <Quote className="rise mt-3" label={fix ? "Say this instead" : "What the manual asks for"}>{fix?.say_instead ?? definition(card, s.key)}</Quote>}
                       </div>
@@ -134,7 +134,7 @@ export function CoachingPanel({ call, a, card, lines, onSeek, repName, onCoached
           return (
             <li key={i} className="rise rounded-md border border-line p-4" style={{ ["--i" as string]: i }}>
               <div className="flex items-start gap-3">
-                <span className="num grid size-6 shrink-0 place-items-center rounded-full bg-brand-600 text-[12px] font-semibold text-white">{i + 1}</span>
+                <span className="num grid size-6 shrink-0 place-items-center rounded-xs bg-brand-600 text-[12px] font-semibold text-white">{i + 1}</span>
                 <div className="min-w-0 flex-1">
                   <p className="t-label">{f.step}</p>
                   <p className="t-small mt-0.5 text-fg-2">{f.what_happened}</p>
