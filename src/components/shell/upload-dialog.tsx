@@ -77,7 +77,7 @@ export function UploadDialog() {
 
   const busy = jobs.some((j) => j.stage !== "done" && !j.error);
   return (
-    <Dialog open={open} onOpenChange={(o) => { setOpen(o); if (!o && !busy) setJobs([]); }} title="Upload a call" description="Drop any recording to watch it get transcribed, classified and scored. Demo: your file stays in your browser and is scored with one of the sample calls." wide>
+    <Dialog open={open} onOpenChange={(o) => { setOpen(o); if (!o && !busy) setJobs([]); }} title="Upload a call" description="Drop a recording to transcribe, classify and score it. Recordings are matched to a sample call for scoring in this workspace." wide>
       <input ref={input} type="file" accept="audio/*" multiple hidden onChange={(e) => { pick(e.target.files); e.target.value = ""; }} />
       <button
         onClick={() => input.current?.click()}
@@ -116,7 +116,7 @@ export function UploadDialog() {
                       return (
                         <li key={s.key} className={cn("rounded-sm border px-3 py-2.5", failed ? "border-danger-500/40 bg-danger-soft" : active ? "border-brand-line bg-brand-soft" : "border-line")}>
                           <p className="t-label flex items-center gap-2">
-                            {failed ? <X className="size-4 text-danger-fg" /> : ok ? <Check className="size-4 text-success-fg" /> : active ? <LoaderCircle className="size-4 animate-spin text-brand-fg" /> : <span className="size-4 rounded-full border border-line-strong" />}
+                            {failed ? <X className="size-4 text-danger-fg" /> : ok ? <Check className="size-4 text-success-fg" /> : active ? <LoaderCircle className="size-4 animate-spin text-brand-fg" /> : <span className="size-4 rounded-xs border border-line-strong" />}
                             {s.label}
                           </p>
                           <p className="t-caption mt-0.5 text-fg-3">{failed ? "Failed" : ok ? "Done" : active ? `About ${s.eta}` : "Waiting"}</p>

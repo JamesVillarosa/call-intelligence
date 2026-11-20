@@ -1,8 +1,8 @@
 import { User } from "lucide-react";
 import { cn } from "@/lib/cn";
 
-// Deterministic pastel per person; text uses the same hue's deep shade so contrast passes AA.
-const PALETTE: [string, string][] = [["#e6e4ff", "#3d2ca8"], ["#d1fae5", "#065f46"], ["#e0f2fe", "#075985"], ["#ffe6d5", "#9a3412"], ["#fce7f3", "#9d174d"], ["#fef3c7", "#92400e"], ["#ccfbf1", "#115e59"], ["#ede9fe", "#5b21b6"]];
+// Vivid gradient discs, white initials: readable in both themes.
+const PALETTE: [string, string][] = [["linear-gradient(135deg,#0075ff,#4f5bff)", "#fff"], ["linear-gradient(135deg,#7551ff,#b04dff)", "#fff"], ["linear-gradient(135deg,#0099c7,#21a5d9)", "#fff"], ["linear-gradient(135deg,#01945f,#14b88a)", "#fff"], ["linear-gradient(135deg,#e05f14,#f08a3c)", "#fff"], ["linear-gradient(135deg,#c0223f,#e64a72)", "#fff"]];
 const hash = (s: string) => [...s].reduce((n, c) => (n * 31 + c.charCodeAt(0)) >>> 0, 7);
 export const initials = (name: string) => name.split(/\s+/).filter(Boolean).map((w) => w[0]).join("").slice(0, 2).toUpperCase();
 
@@ -10,7 +10,7 @@ export function Avatar({ name, size = 28, kind = "person", className }: { name?:
   const style = { width: size, height: size, fontSize: Math.max(10, Math.round(size * 0.38)) };
   if (kind === "customer") return <span className={cn("grid shrink-0 place-items-center rounded-full bg-inset text-fg-2 ring-1 ring-line", className)} style={style} aria-hidden><User style={{ width: size * 0.5, height: size * 0.5 }} /></span>;
   if (!name || kind === "unknown") return <span className={cn("grid shrink-0 place-items-center rounded-full border border-dashed border-line-strong text-fg-3", className)} style={style} aria-hidden>?</span>;
-  if (kind === "rep") return <span className={cn("grid shrink-0 place-items-center rounded-full bg-brand-100 font-semibold text-brand-700", className)} style={style} aria-hidden>{initials(name)}</span>;
+  if (kind === "rep") return <span className={cn("grid shrink-0 place-items-center rounded-full bg-brand-100 font-semibold text-fg", className)} style={style} aria-hidden>{initials(name)}</span>;
   const [bg, fg] = PALETTE[hash(name) % PALETTE.length];
   return <span className={cn("grid shrink-0 place-items-center rounded-full font-semibold", className)} style={{ ...style, background: bg, color: fg }} aria-hidden>{initials(name)}</span>;
 }

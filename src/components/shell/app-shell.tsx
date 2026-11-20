@@ -17,6 +17,7 @@ import { money, typeLabel } from "@/lib/format";
 import { Logo } from "../logo";
 import { Avatar, Dialog, Kbd, Menu, Popover, Sheet } from "../ui";
 import { RepDrawer } from "./rep-drawer";
+import { ThemeToggle } from "./theme-toggle";
 import { UploadDialog } from "./upload-dialog";
 
 const KIND_ICON: Record<string, typeof Bell> = { cancel: UserX, complaint: HeartHandshake, callback: PhoneIncoming, coach: Sparkles };
@@ -100,8 +101,8 @@ export function AppShell({ calls, todo, children }: { calls: CallLite[]; todo: T
       </div>
       {!mini && (
         <Menu align="start" label="Workspace" trigger={
-          <button className="press mt-4 flex w-full items-center gap-2.5 rounded-md border border-line bg-card p-2 text-left shadow-xs hover:border-line-strong">
-            <span className="grid size-8 place-items-center rounded-sm bg-inset text-fg-2"><Building2 className="size-4" /></span>
+          <button className="press mt-5 flex w-full items-center gap-2.5 rounded-md bg-inset p-2 text-left hover:bg-brand-soft">
+            <span className="grid size-8 place-items-center rounded-sm bg-card text-brand-fg shadow-xs"><Building2 className="size-4" /></span>
             <span className="min-w-0 flex-1 leading-tight"><span className="t-label block truncate">Northwind Pest Co.</span><span className="t-caption text-fg-3">Workspace</span></span>
             <ChevronDown className="size-4 text-fg-3" />
           </button>
@@ -113,26 +114,32 @@ export function AppShell({ calls, todo, children }: { calls: CallLite[]; todo: T
           const active = href === "/" ? path === "/" : path.startsWith(href);
           return (
             <Link key={href} href={href} aria-current={active ? "page" : undefined} title={mini ? label : undefined}
-              className={cn("press relative flex h-10 items-center gap-3 rounded-sm px-3 text-[14px] font-medium transition-colors", mini && "justify-center px-0",
-                active ? "bg-brand-soft text-brand-fg before:absolute before:inset-y-2 before:left-0 before:w-[3px] before:rounded-r-full before:bg-brand-600" : "text-fg-2 hover:bg-inset hover:text-fg")}>
-              <I className="size-[18px]" strokeWidth={1.75} />{!mini && <span className="flex-1">{label}</span>}
+              className={cn("press group relative flex h-12 items-center gap-3 rounded-md px-2 text-[14px] font-semibold transition-colors", mini && "justify-center px-0",
+                active ? "bg-card text-fg shadow-md dark:bg-white/[.06] dark:shadow-none" : "text-fg-2 hover:bg-inset hover:text-fg")}>
+              <span className={cn("grid size-8 place-items-center rounded-sm transition-colors", active ? "bg-grad text-white glow" : "bg-card text-brand-fg shadow-xs dark:bg-white/[.06]")}><I className="size-4" strokeWidth={2} /></span>{!mini && <span className="flex-1">{label}</span>}
               {!mini && href === "/calls" && <span className="num rounded-full bg-inset px-2 text-[12px] text-fg-2">{calls.length}</span>}
             </Link>
           );
         })}
       </nav>
       <p className={cn("t-th mb-1 mt-6 px-3 text-fg-3", mini && "sr-only")}>Actions</p>
-      <button onClick={() => emit("upload")} title={mini ? "Upload call" : undefined} className={cn("press flex h-10 items-center gap-3 rounded-sm px-3 text-[14px] font-medium text-fg-2 hover:bg-inset hover:text-fg", mini && "justify-center px-0")}>
-        <Upload className="size-[18px]" strokeWidth={1.75} />{!mini && <span className="flex-1 text-left">Upload call</span>}{!mini && <Kbd>U</Kbd>}
+      <button onClick={() => emit("upload")} title={mini ? "Upload call" : undefined} className={cn("press flex h-12 items-center gap-3 rounded-md px-2 text-[14px] font-semibold text-fg-2 hover:bg-inset hover:text-fg", mini && "justify-center px-0")}>
+        <span className="grid size-8 place-items-center rounded-sm bg-card text-brand-fg shadow-xs dark:bg-white/[.06]"><Upload className="size-4" strokeWidth={2} /></span>{!mini && <span className="flex-1 text-left">Upload call</span>}{!mini && <Kbd>U</Kbd>}
       </button>
       <div className="mt-auto flex flex-col gap-1">
         {!mini && (
-          <p className="t-caption px-3 pb-2 text-fg-3">Fictional demo data</p>
+          <div className="bg-hero relative mb-3 overflow-hidden rounded-lg p-4 text-white">
+            <span aria-hidden className="absolute -right-6 -top-6 size-24 rounded-full bg-white/10 blur-xl" />
+            <span className="grid size-8 place-items-center rounded-sm bg-white text-brand-600"><CircleHelp className="size-4" /></span>
+            <p className="mt-3 text-[14px] font-bold">Need a hand?</p>
+            <p className="text-[12px] leading-4 text-white/80">Every action has a shortcut.</p>
+            <button onClick={() => setHelp(true)} className="press mt-3 h-8 w-full rounded-full bg-white/15 text-[12px] font-bold uppercase tracking-wider backdrop-blur hover:bg-white/25">Shortcuts</button>
+          </div>
         )}
-        <button onClick={() => setHelp(true)} title="Help and shortcuts" className={cn("press flex h-9 items-center gap-3 rounded-sm px-3 text-[14px] text-fg-2 hover:bg-inset hover:text-fg", mini && "justify-center px-0")}>
+        <button onClick={() => setHelp(true)} title="Help and shortcuts" className={cn("press h-9 items-center gap-3 rounded-full px-3 text-[14px] text-fg-2 hover:bg-inset hover:text-fg", mini ? "flex justify-center px-0" : "hidden")}>
           <CircleHelp className="size-[18px]" strokeWidth={1.75} />{!mini && "Help and shortcuts"}
         </button>
-        <button onClick={toggle} className={cn("press hidden h-9 items-center gap-3 rounded-sm px-3 text-[14px] text-fg-2 hover:bg-inset hover:text-fg lg:flex", mini && "justify-center px-0")} aria-label={mini ? "Expand sidebar" : "Collapse sidebar"}>
+        <button onClick={toggle} className={cn("press hidden h-9 items-center gap-3 rounded-full px-3 text-[14px] text-fg-2 hover:bg-inset hover:text-fg lg:flex", mini && "justify-center px-0")} aria-label={mini ? "Expand sidebar" : "Collapse sidebar"}>
           {mini ? <PanelLeftOpen className="size-[18px]" strokeWidth={1.75} /> : <><PanelLeftClose className="size-[18px]" strokeWidth={1.75} />Collapse</>}
         </button>
       </div>
@@ -141,12 +148,12 @@ export function AppShell({ calls, todo, children }: { calls: CallLite[]; todo: T
 
   return (
     <div className="lg:flex">
-      <aside className={cn("sticky top-0 hidden h-dvh shrink-0 border-r border-line bg-card transition-[width] duration-200 lg:block", collapsed ? "w-[72px]" : "w-[264px]")}>{side(collapsed)}</aside>
+      <aside className={cn("surface sticky top-4 m-4 mr-0 hidden h-[calc(100dvh-2rem)] shrink-0 overflow-y-auto rounded-xl transition-[width] duration-300 ease-[var(--ease-out)] lg:block", collapsed ? "w-[80px]" : "w-[264px]")}>{side(collapsed)}</aside>
       <Sheet open={drawer} onOpenChange={setDrawer} title="Navigation" side="left">{side(false)}</Sheet>
 
       <div className="min-w-0 flex-1">
-        <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-line bg-bg/80 px-4 backdrop-blur-md sm:px-8">
-          <button onClick={() => setDrawer(true)} className="press -ml-1 grid size-10 place-items-center rounded-sm hover:bg-inset lg:hidden" aria-label="Open navigation"><MenuIcon className="size-5" /></button>
+        <header className="sticky top-0 z-30 flex h-16 items-center gap-3 bg-bg/70 px-4 backdrop-blur-xl sm:px-8 lg:top-4 lg:mx-6 lg:mt-4 lg:h-14 lg:rounded-full lg:bg-card/70 lg:px-4 lg:shadow-md lg:ring-1 lg:ring-line">
+          <button onClick={() => setDrawer(true)} className="press -ml-1 grid size-10 place-items-center rounded-full hover:bg-inset lg:hidden" aria-label="Open navigation"><MenuIcon className="size-5" /></button>
           <span className="lg:hidden"><Logo variant="mark" size={28} /></span>
           <nav aria-label="Breadcrumb" className="hidden min-w-0 items-center gap-1.5 text-[14px] md:flex">
             {crumbs.map((c, i) => (
@@ -156,13 +163,14 @@ export function AppShell({ calls, todo, children }: { calls: CallLite[]; todo: T
               </span>
             ))}
           </nav>
-          <button onClick={() => setPalette(true)} aria-label="Search calls, reps and actions (Ctrl K)" className="press ml-auto flex h-10 min-w-0 items-center gap-2 rounded-sm border border-line bg-card px-3 text-[14px] text-fg-3 shadow-xs hover:border-line-strong md:ml-6 md:w-80">
+          <button onClick={() => setPalette(true)} aria-label="Search calls, reps and actions (Ctrl K)" className="press ml-auto flex h-10 min-w-0 items-center gap-2 rounded-full border border-line bg-card px-4 text-[14px] text-fg-3 hover:border-brand-line md:ml-6 md:w-80">
             <Search className="size-4 shrink-0" /><span className="hidden truncate sm:inline">Search calls, reps, actions</span><span className="ml-auto hidden gap-0.5 sm:flex"><Kbd>⌘</Kbd><Kbd>K</Kbd></span>
           </button>
           <div className="flex items-center gap-1 md:ml-auto">
+            <ThemeToggle />
             <Popover align="end" className="w-80 p-0" trigger={
-              <button className="press relative grid size-10 place-items-center rounded-sm text-fg-2 hover:bg-inset hover:text-fg" aria-label={`${todo.length} open to-dos`}>
-                <Bell className="size-[18px]" />{todo.length > 0 && <span className="num absolute -right-0.5 -top-0.5 grid h-[18px] min-w-[18px] place-items-center rounded-full bg-brand-600 px-1 text-[11px] font-semibold text-white ring-2 ring-bg">{todo.length}</span>}
+              <button className="press relative grid size-10 place-items-center rounded-full text-fg-2 hover:bg-inset hover:text-fg" aria-label={`${todo.length} open to-dos`}>
+                <Bell className="size-[18px]" />{todo.length > 0 && <span className="num absolute -right-0.5 -top-0.5 grid h-[18px] min-w-[18px] place-items-center rounded-full bg-grad px-1 text-[11px] font-semibold text-white ring-2 ring-card">{todo.length}</span>}
               </button>
             }>
               <div className="flex items-center border-b border-line px-4 py-3"><p className="t-label">To do <span className="num text-fg-3">{todo.length}</span></p>
@@ -171,7 +179,7 @@ export function AppShell({ calls, todo, children }: { calls: CallLite[]; todo: T
                 {todo.length === 0 && <li className="t-small px-4 py-6 text-center text-fg-2">All caught up.</li>}
                 {todo.slice(0, 10).map((t) => { const K = KIND_ICON[t.kind] ?? Bell; return (
                   <li key={t.id + t.kind}><Link href={`/calls/${t.id}`} className="flex gap-3 px-4 py-3 hover:bg-inset">
-                    <span className="mt-0.5 grid size-7 shrink-0 place-items-center rounded-full bg-inset text-fg-2"><K className="size-3.5" /></span>
+                    <span className="mt-0.5 grid size-7 shrink-0 place-items-center rounded-sm bg-brand-soft text-brand-fg"><K className="size-3.5" /></span>
                     <span className="min-w-0 flex-1"><span className="t-small block font-medium">{t.title}</span>
                       <span className="t-caption mt-0.5 flex flex-wrap items-center gap-x-2 text-fg-3">{t.rep && <span>{t.rep}</span>}{t.value > 0 && <span className="num">{money(t.value)}/yr</span>}{t.urgent && <span className="text-danger-fg">Due today</span>}<span>{ago(t.created)}</span></span></span>
                   </Link></li>
@@ -185,7 +193,7 @@ export function AppShell({ calls, todo, children }: { calls: CallLite[]; todo: T
             ]} />
           </div>
         </header>
-        <main id="main" className="pb-24">{children}</main>
+        <main id="main" className="pb-24 lg:pt-2">{children}</main>
       </div>
 
       <Palette open={palette} onOpenChange={setPalette} calls={calls} />
@@ -204,7 +212,7 @@ function Palette({ open, onOpenChange, calls }: { open: boolean; onOpenChange: (
   const router = useRouter();
   const [recents] = useLocal<string[]>("recent-calls", []);
   const [q, setQ] = useState("");
-  const hl = (t: string) => { const k = q ? t.toLowerCase().indexOf(q.toLowerCase()) : -1; return k < 0 ? t : <>{t.slice(0, k)}<mark className="rounded-xs bg-warning-100 text-fg">{t.slice(k, k + q.length)}</mark>{t.slice(k + q.length)}</>; };
+  const hl = (t: string) => { const k = q ? t.toLowerCase().indexOf(q.toLowerCase()) : -1; return k < 0 ? t : <>{t.slice(0, k)}<mark className="rounded-[3px] bg-brand-soft text-fg">{t.slice(k, k + q.length)}</mark>{t.slice(k + q.length)}</>; };
   const recentCalls = q ? [] : (recents.map((id) => calls.find((c) => c.id === id)).filter(Boolean) as CallLite[]);
   const go = (href: string) => { onOpenChange(false); router.push(href); };
   const reps = [...new Set(calls.map((c) => c.rep).filter(Boolean))] as string[];

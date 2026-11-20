@@ -18,7 +18,7 @@ export function EmptyState({ title, body, action, className }: { title: string; 
 export function ErrorState({ title = "Something went wrong", body, action }: { title?: string; body?: React.ReactNode; action?: React.ReactNode }) {
   return (
     <div role="alert" className="flex flex-col items-center px-6 py-14 text-center">
-      <span className="grid size-11 place-items-center rounded-full bg-danger-soft text-danger-fg"><TriangleAlert className="size-5" /></span>
+      <span className="grid size-11 place-items-center rounded-xs bg-danger-soft text-danger-fg"><TriangleAlert className="size-5" /></span>
       <p className="t-h3 mt-4">{title}</p>
       {body && <p className="t-small mt-1.5 max-w-sm text-fg-2">{body}</p>}
       {action && <div className="mt-5">{action}</div>}

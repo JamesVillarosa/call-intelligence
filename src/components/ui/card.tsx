@@ -1,12 +1,12 @@
 import { cn } from "@/lib/cn";
 
 export function Card({ className, interactive, as: C = "section", ...p }: React.HTMLAttributes<HTMLElement> & { interactive?: boolean; as?: "section" | "div" | "article" }) {
-  return <C className={cn("rounded-lg border border-line bg-card shadow-xs", interactive && "lift cursor-pointer hover:border-line-strong", className)} {...p} />;
+  return <C className={cn("surface rounded-xl", interactive && "lift cursor-pointer", className)} {...p} />;
 }
 export function CardHeader({ title, sub, action, icon, className }: { title: React.ReactNode; sub?: React.ReactNode; action?: React.ReactNode; icon?: React.ReactNode; className?: string }) {
   return (
     <header className={cn("flex items-start gap-3 px-5 pt-5 sm:px-6", className)}>
-      {icon && <span className="mt-0.5 grid size-8 shrink-0 place-items-center rounded-sm bg-brand-soft text-brand-fg [&_svg]:size-4">{icon}</span>}
+      {icon && <span className="grid size-9 shrink-0 place-items-center rounded-sm bg-brand-soft text-brand-fg [&_svg]:size-[18px]">{icon}</span>}
       <div className="min-w-0 flex-1">
         <h2 className="t-h3">{title}</h2>
         {sub && <p className="t-small mt-0.5 text-fg-2">{sub}</p>}

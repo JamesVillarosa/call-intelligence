@@ -2,24 +2,23 @@ import { useId } from "react";
 import { cn } from "@/lib/cn";
 import { type Band } from "@/lib/display";
 
-export const BAND_COLOR: Record<Band, string> = { gold: "#ca8a04", green: "#059669", close: "#d97706", work: "#ea580c", critical: "#e11d48", none: "#9aa2b3" };
+export const BAND_COLOR: Record<Band, string> = { gold: "var(--band-gold)", green: "var(--band-green)", close: "var(--band-close)", work: "var(--band-work)", critical: "var(--band-critical)", none: "var(--band-none)" };
 
-// Animated ring. Gold gets a slow shimmer stroke; color is always paired with a label elsewhere.
+// Gauge ring in the band color with a soft track; the number sits inside. Color is always paired with a label elsewhere.
 export function ScoreRing({ value, max, band, size = 40, stroke, label, sub }: { value: number; max: number; band: Band; size?: number; stroke?: number; label?: React.ReactNode; sub?: React.ReactNode }) {
-  const w = stroke ?? Math.max(3, Math.round(size / 11));
-  const r = (size - w) / 2, c = 2 * Math.PI * r, p = max ? Math.min(value / max, 1) : 0;
+  const p = max ? Math.min(value / max, 1) : 0;
+  const w = stroke ?? Math.max(3, Math.round(size * 0.085));
+  const r = (size - w) / 2, c = 2 * Math.PI * r;
   return (
-    <span className="relative inline-grid shrink-0 place-items-center" style={{ width: size, height: size }} role="img" aria-label={`Score ${value} of ${max}`}>
-      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="-rotate-90">
-        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="var(--inset)" strokeWidth={w} />
-        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke={BAND_COLOR[band]} strokeWidth={w} strokeLinecap="round" strokeDasharray={c} strokeDashoffset={c * (1 - p)} className="ring-fill" style={{ ["--c" as string]: c }} />
-        {band === "gold" && <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="#fef9c3" strokeOpacity=".7" strokeWidth={w / 2} strokeDasharray={`${c * 0.08} ${c}`} className="animate-[spin_3s_linear_infinite] origin-center motion-reduce:hidden" />}
-      </svg>
-      {label != null && (
-        <span className="absolute inset-0 grid place-items-center text-center leading-none">
-          <span><span className="num block font-semibold" style={{ fontSize: Math.max(11, size * 0.24) }}>{label}</span>{sub && <span className="t-caption mt-1 block text-fg-3">{sub}</span>}</span>
-        </span>
-      )}
+    <span className="inline-flex shrink-0 flex-col items-start gap-2" role="img" aria-label={`Score ${value} of ${max}`}>
+      <span className="relative grid place-items-center" style={{ width: size, height: size }}>
+        <svg width={size} height={size} className="-rotate-90" aria-hidden>
+          <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="var(--inset)" strokeWidth={w} />
+          <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke={BAND_COLOR[band]} strokeWidth={w} strokeLinecap="round" strokeDasharray={c} strokeDashoffset={c * (1 - Math.max(p, 0.02))} className="ring-fill" style={{ ["--c" as string]: c, filter: size >= 120 ? `drop-shadow(0 0 6px ${BAND_COLOR[band]})` : undefined }} />
+        </svg>
+        {label != null && <span className="t-plate absolute leading-none text-fg" style={{ fontSize: Math.max(10, Math.round(size * (String(label).length > 4 ? 0.2 : 0.26))) }}>{label}</span>}
+      </span>
+      {sub && <span className="t-caption block leading-tight text-fg-3">{sub}</span>}
     </span>
   );
 }
@@ -35,13 +34,13 @@ export function ScoreBar({ value, max = 100, band, className, i = 0 }: { value: 
 // Segmented meter: n of total steps, one segment each.
 export function ProgressMeter({ value, total, band }: { value: number; total: number; band: Band }) {
   return (
-    <span className="flex gap-1" role="img" aria-label={`${value} of ${total}`}>
+    <span className="flex gap-[2px]" role="img" aria-label={`${value} of ${total}`}>
       {Array.from({ length: total }, (_, k) => <span key={k} className="h-1.5 flex-1 rounded-full" style={{ background: k < value ? BAND_COLOR[band] : "var(--inset)" }} />)}
     </span>
   );
 }
 
-export function Sparkline({ data, width = 96, height = 40, color = "#4f46e5", fluid, label }: { data: number[]; width?: number; height?: number; color?: string; fluid?: boolean; label?: string }) {
+export function Sparkline({ data, width = 96, height = 40, color = "var(--chart-1)", fluid, label }: { data: number[]; width?: number; height?: number; color?: string; fluid?: boolean; label?: string }) {
   const id = `sp${useId().replace(/:/g, "")}`;
   if (data.length < 2) return <span style={{ width, height }} className="inline-block" aria-hidden />;
   const max = Math.max(...data, 1), min = Math.min(...data, 0);

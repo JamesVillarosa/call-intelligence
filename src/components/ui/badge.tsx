@@ -4,10 +4,6 @@ import { cn } from "@/lib/cn";
 import { BAND_LABEL, type Band } from "@/lib/display";
 
 export type Tone = "neutral" | "brand" | "success" | "warning" | "orange" | "danger" | "info" | "gold" | "mint";
-const soft: Record<Tone, string> = {
-  neutral: "bg-inset text-fg-2", brand: "bg-brand-soft text-brand-fg", success: "bg-success-soft text-success-fg", warning: "bg-warning-soft text-warning-fg",
-  orange: "bg-orange-soft text-orange-fg", danger: "bg-danger-soft text-danger-fg", info: "bg-info-soft text-info-fg", gold: "bg-gold-soft text-gold-fg", mint: "bg-info-soft text-info-fg",
-};
 export const dotColor: Record<Tone, string> = {
   neutral: "bg-n-400", brand: "bg-brand-500", success: "bg-success-500", warning: "bg-warning-500", orange: "bg-orange-500", danger: "bg-danger-500", info: "bg-info-500", gold: "bg-gold-500", mint: "bg-info-500",
 };
@@ -15,12 +11,13 @@ export const toneText: Record<Tone, string> = {
   neutral: "text-fg-2", brand: "text-brand-fg", success: "text-success-fg", warning: "text-warning-fg", orange: "text-orange-fg", danger: "text-danger-fg", info: "text-info-fg", gold: "text-gold-fg", mint: "text-info-fg",
 };
 
-const badge = cva("inline-flex items-center gap-1.5 whitespace-nowrap rounded-full font-medium [&_svg]:size-3.5", {
-  variants: { size: { sm: "h-6 px-2 text-[12px]", md: "h-6 px-2.5 text-[13px]", lg: "h-7 px-3 text-[13px]" } },
+// Soft pill: round meaning dot, words in ink.
+const badge = cva("inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border border-line bg-card font-semibold text-fg-2 [&_svg]:size-3.5", {
+  variants: { size: { sm: "h-6 px-2 text-[12px]", md: "h-6 px-2 text-[13px]", lg: "h-7 px-2.5 text-[13px]" } },
   defaultVariants: { size: "md" },
 });
 export function Badge({ tone = "neutral", size, dot, icon, className, children }: { tone?: Tone; dot?: boolean; icon?: React.ReactNode; className?: string; children: React.ReactNode } & VariantProps<typeof badge>) {
-  return <span className={cn(badge({ size }), soft[tone], className)}>{dot && <span className={cn("size-1.5 rounded-full", dotColor[tone])} />}{icon}{children}</span>;
+  return <span className={cn(badge({ size }), className)}>{(dot || (tone !== "neutral" && !icon)) && <span className={cn("size-2 shrink-0 rounded-full", dotColor[tone])} />}{icon && <span className={toneText[tone]}>{icon}</span>}{children}</span>;
 }
 
 export function StatusDot({ tone = "neutral", pulse, label }: { tone?: Tone; pulse?: boolean; label?: string }) {
@@ -33,13 +30,13 @@ export function BandBadge({ band, size }: { band: Band } & VariantProps<typeof b
 }
 
 export function Kbd({ children }: { children: React.ReactNode }) {
-  return <kbd className="inline-flex h-5 min-w-5 items-center justify-center rounded-xs border border-line bg-inset px-1 font-sans text-[11px] font-medium text-fg-2 shadow-xs">{children}</kbd>;
+  return <kbd className="inline-flex h-5 min-w-5 items-center justify-center rounded-[5px] border border-line bg-inset px-1 font-sans text-[11px] font-medium text-fg-2 shadow-xs">{children}</kbd>;
 }
 
 export function StepPill({ label, passed, onClick }: { label: string; passed: boolean; onClick?: () => void }) {
   const C = onClick ? "button" : "span";
   return (
-    <C onClick={onClick} className={cn("inline-flex h-6 items-center gap-1 rounded-full px-2 text-[12px] font-medium [&_svg]:size-3", passed ? "bg-success-soft text-success-fg" : "bg-warning-soft text-warning-fg", onClick && "press hover:brightness-95")}>
+    <C onClick={onClick} className={cn("inline-flex h-6 items-center gap-1 rounded-full border border-line bg-card px-1.5 text-[12px] font-medium text-fg-2 [&_svg]:size-3", passed ? "[&_svg]:text-success-500" : "[&_svg]:text-warning-500", onClick && "press hover:border-fg")}>
       {passed ? <Check strokeWidth={2.5} /> : <X strokeWidth={2.5} />}{label}
     </C>
   );

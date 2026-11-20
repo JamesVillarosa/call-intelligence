@@ -3,7 +3,7 @@ import { X } from "lucide-react";
 import { Dialog as D, DropdownMenu as M, Popover as P, Tooltip as T } from "radix-ui";
 import { cn } from "@/lib/cn";
 
-const pop = "z-50 rounded-md border border-line bg-elevated shadow-lg outline-none data-[state=open]:animate-[rise_160ms_var(--ease-out)] origin-[var(--radix-popper-transform-origin)]";
+const pop = "z-50 rounded-lg border border-line bg-elevated shadow-lg outline-none data-[state=open]:animate-[rise_160ms_var(--ease-out)] origin-[var(--radix-popper-transform-origin)]";
 
 export function Tooltip({ content, children, side = "top" }: { content: React.ReactNode; children: React.ReactNode; side?: "top" | "bottom" | "left" | "right" }) {
   return (
@@ -11,8 +11,8 @@ export function Tooltip({ content, children, side = "top" }: { content: React.Re
       <T.Root>
         <T.Trigger asChild>{children}</T.Trigger>
         <T.Portal>
-          <T.Content side={side} sideOffset={6} className="z-50 max-w-xs rounded-sm bg-n-900 px-2.5 py-1.5 text-[12px] leading-4 text-white shadow-lg data-[state=delayed-open]:animate-[rise_140ms_var(--ease-out)]">
-            {content}<T.Arrow className="fill-n-900" />
+          <T.Content side={side} sideOffset={6} className="z-50 max-w-xs rounded-sm bg-[#0f1535] px-2.5 py-1.5 text-[12px] leading-4 text-white shadow-lg data-[state=delayed-open]:animate-[rise_140ms_var(--ease-out)]">
+            {content}<T.Arrow className="fill-[#0f1535]" />
           </T.Content>
         </T.Portal>
       </T.Root>
@@ -51,8 +51,8 @@ export function Dialog({ open, onOpenChange, title, description, children, foote
   return (
     <D.Root open={open} onOpenChange={onOpenChange}>
       <D.Portal>
-        <D.Overlay className="fixed inset-0 z-40 bg-n-950/40 backdrop-blur-[2px] data-[state=open]:animate-[fade_200ms_ease]" />
-        <D.Content className={cn("fixed left-1/2 top-1/2 z-50 max-h-[90dvh] w-[calc(100vw-2rem)] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-xl border border-line bg-elevated shadow-lg outline-none data-[state=open]:animate-[dialog_240ms_var(--ease-out)]", wide ? "max-w-2xl" : "max-w-lg")}>
+        <D.Overlay className="fixed inset-0 z-40 bg-[#060b26]/50 backdrop-blur-sm data-[state=open]:animate-[fade_200ms_ease]" />
+        <D.Content className={cn("fixed left-1/2 top-1/2 z-50 max-h-[90dvh] w-[calc(100vw-2rem)] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-[24px] border border-line bg-elevated shadow-lg outline-none data-[state=open]:animate-[dialog_240ms_var(--ease-out)]", wide ? "max-w-2xl" : "max-w-lg")}>
           <div className="flex items-start gap-3 px-6 pt-6">
             <div className="min-w-0 flex-1">
               <D.Title className="t-h3">{title}</D.Title>
@@ -72,7 +72,7 @@ export function Sheet({ open, onOpenChange, title, children, side = "right" }: {
   return (
     <D.Root open={open} onOpenChange={onOpenChange}>
       <D.Portal>
-        <D.Overlay className="fixed inset-0 z-40 bg-n-950/40 data-[state=open]:animate-[fade_200ms_ease]" />
+        <D.Overlay className="fixed inset-0 z-40 bg-[#060b26]/50 data-[state=open]:animate-[fade_200ms_ease]" />
         <D.Content className={cn("fixed inset-y-0 z-50 flex w-[min(480px,100vw)] flex-col border-line bg-elevated shadow-lg outline-none", side === "right" ? "right-0 border-l data-[state=open]:animate-[sheet-r_280ms_var(--ease-out)]" : "left-0 w-[min(300px,85vw)] border-r data-[state=open]:animate-[sheet-l_280ms_var(--ease-out)]")}>
           <D.Title className="sr-only">{title}</D.Title>
           <D.Description className="sr-only">{title}</D.Description>

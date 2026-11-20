@@ -5,15 +5,15 @@ import { forwardRef } from "react";
 import { cn } from "@/lib/cn";
 import { Popover } from "./overlay";
 
-const field = "h-10 w-full rounded-sm border border-line bg-card px-3 text-[14px] text-fg shadow-xs outline-none transition-[border-color,box-shadow] placeholder:text-fg-3 hover:border-line-strong focus:border-brand-500 focus:shadow-[var(--ring)]";
+const field = "h-10 w-full rounded-full border border-line bg-card px-4 text-[14px] text-fg shadow-xs outline-none transition-[border-color,box-shadow] placeholder:text-fg-3 hover:border-line-strong focus:border-brand-500 focus:shadow-[var(--ring)]";
 
 export const Input = forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement>>(({ className, ...p }, ref) => <input ref={ref} className={cn(field, className)} {...p} />);
 Input.displayName = "Input";
 
 export const SearchInput = forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement> & { hint?: React.ReactNode }>(({ className, hint, ...p }, ref) => (
   <span className={cn("relative block", className)}>
-    <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-fg-3" />
-    <input ref={ref} type="search" className={cn(field, "pl-9", hint ? "pr-12" : "")} {...p} />
+    <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-fg-3" />
+    <input ref={ref} type="search" className={cn(field, "pl-10", hint ? "pr-12" : "")} {...p} />
     {hint && <span className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2">{hint}</span>}
   </span>
 ));
@@ -63,7 +63,7 @@ export function RangeSlider({ value, onChange, min = 0, max = 100, label }: { va
 export function MultiSelect({ label, options, value, onChange }: { label: string; options: { value: string; label: string; count?: number }[]; value: string[]; onChange: (v: string[]) => void }) {
   return (
     <Popover trigger={
-      <button type="button" aria-label={`Filter by ${label.toLowerCase()}${value.length ? `, ${value.length} selected` : ""}`} className={cn("press inline-flex h-10 items-center gap-2 rounded-sm border bg-card px-3 text-[14px] font-medium shadow-xs hover:border-line-strong", value.length ? "border-brand-line text-brand-fg" : "border-line text-fg")}>
+      <button type="button" aria-label={`Filter by ${label.toLowerCase()}${value.length ? `, ${value.length} selected` : ""}`} className={cn("press inline-flex h-10 items-center gap-2 rounded-full border bg-card px-3 text-[14px] font-medium shadow-xs hover:border-line-strong", value.length ? "border-brand-line text-brand-fg" : "border-line text-fg")}>
         {label}{value.length > 0 && <span className="num grid h-5 min-w-5 place-items-center rounded-full bg-brand-600 px-1 text-[11px] text-white">{value.length}</span>}<ChevronDown className="size-4 text-fg-3" />
       </button>
     } className="w-60 p-1">
@@ -91,7 +91,7 @@ export function DateRangePicker({ value, onChange }: { value: DateRange; onChang
   const label = value.from || value.to ? `${value.from ?? "Start"} to ${value.to ?? "Today"}` : "All time";
   const iso = (d: Date) => d.toISOString().slice(0, 10);
   return (
-    <Popover trigger={<button className="press inline-flex h-10 items-center gap-2 rounded-sm border border-line bg-card px-3 text-[14px] font-medium shadow-xs hover:border-line-strong"><Calendar className="size-4 text-fg-3" />{label}<ChevronDown className="size-4 text-fg-3" /></button>} align="end" className="w-72">
+    <Popover trigger={<button className="press inline-flex h-10 items-center gap-2 rounded-full border border-line bg-card px-4 text-[14px] font-medium shadow-xs hover:border-line-strong"><Calendar className="size-4 text-fg-3" />{label}<ChevronDown className="size-4 text-fg-3" /></button>} align="end" className="w-72">
       <div className="grid grid-cols-2 gap-1">
         {PRESETS.map(([l, d]) => <button key={l} onClick={() => onChange(d == null ? {} : { from: iso(new Date(Date.now() - d * 864e5)) })} className="rounded-sm px-2.5 py-2 text-left text-[13px] font-medium hover:bg-inset">{l}</button>)}
       </div>
