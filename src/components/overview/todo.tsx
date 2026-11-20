@@ -11,10 +11,10 @@ import { money } from "@/lib/format";
 import { Avatar, Badge, Button, Dialog, IconButton, Menu, Tabs, type Tone } from "../ui";
 
 const KIND: Record<Attention["kind"], { label: string; tone: Tone; chip: string; icon: typeof Check }> = {
-  cancel: { label: "Win back", tone: "danger", chip: "bg-danger-soft text-danger-fg", icon: UserX },
-  complaint: { label: "At risk", tone: "warning", chip: "bg-warning-soft text-warning-fg", icon: HeartHandshake },
-  callback: { label: "Call back", tone: "info", chip: "bg-info-soft text-info-fg", icon: PhoneIncoming },
-  coach: { label: "Coach", tone: "brand", chip: "bg-brand-soft text-brand-fg", icon: Sparkles },
+  cancel: { label: "Win back", tone: "danger", chip: "text-danger-fg", icon: UserX },
+  complaint: { label: "At risk", tone: "warning", chip: "text-warning-fg", icon: HeartHandshake },
+  callback: { label: "Call back", tone: "info", chip: "text-info-fg", icon: PhoneIncoming },
+  coach: { label: "Coach", tone: "brand", chip: "text-fg-2", icon: Sparkles },
 };
 type Item = Attention & { done?: boolean };
 const SNOOZE = "snoozed-todos";

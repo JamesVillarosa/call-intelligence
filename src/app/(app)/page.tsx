@@ -1,10 +1,10 @@
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, CalendarCheck, CircleDollarSign, Gauge, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import { CallMix, ScoreTrend } from "@/components/overview/lazy";
 import { BreakdownBars, CoachCard, Heatmap, TeamBoard } from "@/components/overview/panels";
 import { TodoQueue } from "@/components/overview/todo";
 import { DateFilter, UploadTrigger } from "@/components/page-bits";
-import { Badge, buttonStyles, Card, CardHeader, CountUp, EmptyState, KpiCard, ScoreRing, Sparkline } from "@/components/ui";
+import { Badge, buttonStyles, Card, CardHeader, CountUp, EmptyState, KpiCard, ScoreRing } from "@/components/ui";
 import { BAND_LABEL, bandOfPct, filterCalls, headline, heatmap, pillars, trend } from "@/lib/display";
 import { CountLine } from "@/components/page-bits";
 import { listCalls } from "@/lib/calls";
@@ -17,7 +17,6 @@ import { insights, type Attention } from "@/lib/insights";
 export const metadata = { title: "Overview" };
 export const dynamic = "force-dynamic";
 
-const cumulative = (xs: boolean[]) => xs.map((_, i) => pct(xs.slice(0, i + 1).filter(Boolean).length, i + 1));
 
 export default async function Overview({ searchParams }: { searchParams: Promise<{ from?: string; to?: string }> }) {
   const sp = await searchParams;
@@ -72,41 +71,48 @@ export default async function Overview({ searchParams }: { searchParams: Promise
   }));
   const typeLabels = Object.fromEntries(Object.keys(CALL_TYPES).map((k) => [k, typeLabel(k)]));
   const cta = s.failed ? { href: "/calls?status=error", text: `Review ${s.failed} call${s.failed > 1 ? "s" : ""} to retry` } : { href: "/calls?attention=1", text: "Review calls that need attention" };
-  const revenueSeries = s.attention.filter((a) => a.kind !== "coach").reduce<number[]>((acc, a) => [...acc, (acc.at(-1) ?? 0) + a.value], [0]);
 
   return (
     <div className="mx-auto flex max-w-[1320px] flex-col gap-6 px-4 py-8 sm:px-8">
       {header}
 
-      <section className="rounded-lg border border-line bg-card p-6 shadow-xs sm:p-8" aria-label="Summary">
-        <div className="flex flex-col gap-8 lg:flex-row lg:items-center">
-          <div className="min-w-0 flex-1">
-            <h2 className="t-h2 max-w-3xl sm:text-[28px] sm:leading-9">{h.lead}<span className="text-brand-fg">{h.figure}</span>{h.rest}</h2>
-            <div className="mt-4 flex flex-wrap gap-2">{h.chips.map((c) => <Badge key={c.text} size="lg" tone={c.tone === "good" ? "success" : c.tone === "bad" ? "danger" : c.tone === "warn" ? "warning" : "neutral"} dot>{c.text}</Badge>)}</div>
-            <div className="mt-6 flex flex-wrap gap-2">
-              <Link href={cta.href} className={buttonStyles({ variant: "primary" })}>{cta.text}<ArrowRight /></Link>
-              <Link href="#coach" className={buttonStyles({ variant: "secondary" })}>See coaching plan</Link>
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
+        <KpiCard i={1} icon={<CalendarCheck />} label="Booking rate" help={`Sales calls that ended booked. ${listOf(sales)}.`} href="/calls?type=sales"
+          value={s.sales ? <CountUp value={bookingRate} suffix="%" /> : "None"} denom={`${s.booked} of ${s.sales} sales calls`} />
+        <KpiCard i={2} icon={<ShieldCheck />} label="Cancels saved" help={s.retention ? `Cancellation calls where the customer stayed. ${listOf(saves)}.` : "No cancellation calls yet."} href="/calls?type=retention"
+          value={s.retention ? <><CountUp value={s.saved} /><span className="text-fg-3">/{s.retention}</span></> : "None"} denom={s.retention ? `${pct(s.saved, s.retention)}% of cancel calls` : "No cancel calls yet"} />
+        <KpiCard i={3} icon={<Gauge />} label="Average score" help="Each scored call's points as a share of its scorecard (Sales 17, Office 12, Retention 12), averaged." href="/calls?sort=score&dir=asc"
+          value={s.avgScore == null ? "None" : <CountUp value={s.avgScore} suffix="%" />} denom={`${s.gold} gold, ${s.below} below standard`} />
+        <KpiCard i={4} icon={<CircleDollarSign />} label="Open revenue" help="Yearly value of unbooked sales leads and unsaved cancels, from the monthly price said on each call." href="/#todo"
+          value={<CountUp value={s.atRisk} prefix="$" />} denom="per year, still on the table" />
+      </div>
+
+      <section className="grid gap-6 lg:grid-cols-12" aria-label="Summary">
+        <div className="bg-hero rise relative isolate overflow-hidden rounded-xl p-6 text-white shadow-lg sm:p-8 lg:col-span-8" style={{ ["--i" as string]: 5 }}>
+          <span aria-hidden className="absolute -right-24 -top-24 -z-10 size-80 rounded-full border-[40px] border-white/[.06]" />
+          <span aria-hidden className="absolute -bottom-32 right-24 -z-10 size-72 rounded-full bg-cyan-400/30 blur-3xl" />
+          <svg aria-hidden className="absolute inset-x-0 bottom-0 -z-10 h-28 w-full opacity-30" viewBox="0 0 400 100" preserveAspectRatio="none"><path d="M0 70 C40 40 80 90 120 60 S200 20 240 50 320 90 400 40" fill="none" stroke="white" strokeWidth="1.5" /><path d="M0 85 C50 60 90 100 140 75 S220 45 270 70 340 95 400 60" fill="none" stroke="white" strokeWidth="1" strokeOpacity=".6" /></svg>
+          <p className="text-[13px] font-semibold text-white/70">This period at Northwind Pest Co.</p>
+          <h2 className="mt-2 max-w-[24ch] text-[26px] font-bold leading-[32px] tracking-[-0.03em] sm:max-w-[30ch] sm:text-[34px] sm:leading-[40px]">{h.lead}<span className="bg-gradient-to-r from-cyan-300 to-white bg-clip-text text-transparent">{h.figure}</span>{h.rest}</h2>
+          <div className="mt-5 flex flex-wrap gap-2">{h.chips.map((c) => <span key={c.text} className="inline-flex h-7 items-center gap-1.5 rounded-full bg-white/12 px-3 text-[13px] font-semibold ring-1 ring-white/15 backdrop-blur"><span className={`size-2 rounded-full ${c.tone === "good" ? "bg-success-500" : c.tone === "bad" ? "bg-danger-500" : c.tone === "warn" ? "bg-warning-500" : "bg-white/60"}`} />{c.text}</span>)}</div>
+          <div className="mt-7 flex flex-wrap gap-2">
+            <Link href={cta.href} className="press group inline-flex h-11 items-center gap-2 rounded-full bg-white pl-5 pr-1.5 text-[14px] font-bold text-brand-700 shadow-lg hover:bg-white/95">{cta.text}<span className="grid size-8 place-items-center rounded-full bg-brand-500 text-white transition-transform duration-300 ease-[var(--ease-out)] group-hover:translate-x-0.5"><ArrowRight className="size-4" /></span></Link>
+            <Link href="#coach" className="press inline-flex h-11 items-center rounded-full px-5 text-[14px] font-bold text-white ring-1 ring-white/30 hover:bg-white/10">See coaching plan</Link>
+          </div>
+        </div>
+        {s.avgScore != null && (
+          <div className="surface rise flex flex-col rounded-xl p-6 lg:col-span-4" style={{ ["--i" as string]: 6 }}>
+            <h2 className="t-h3">Team average</h2>
+            <p className="t-small text-fg-2">Across {s.scored} scored calls</p>
+            <div className="my-auto flex justify-center pt-6"><ScoreRing value={s.avgScore} max={100} band={avgBand} size={168} stroke={14} label={`${s.avgScore}%`} /></div>
+            <div className="mt-6 flex items-center justify-between rounded-lg bg-inset px-4 py-3">
+              <span className="t-caption text-fg-3">0%</span>
+              <span className="text-center"><span className="t-label block">{BAND_LABEL[avgBand]}</span><span className="t-caption text-fg-3">{s.gold} gold, {s.below} below</span></span>
+              <span className="t-caption text-fg-3">100%</span>
             </div>
           </div>
-          {s.avgScore != null && (
-            <div className="flex items-center gap-5 lg:flex-col lg:gap-3 lg:pr-4">
-              <ScoreRing value={s.avgScore} max={100} band={avgBand} size={120} stroke={10} label={`${s.avgScore}%`} sub="team average" />
-              <p className="t-small text-fg-2">{BAND_LABEL[avgBand]}, across {s.scored} scored calls</p>
-            </div>
-          )}
-        </div>
+        )}
       </section>
-
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <KpiCard i={1} label="Booking rate" help={`Sales calls that ended booked. ${listOf(sales)}.`} href="/calls?type=sales"
-          value={s.sales ? <CountUp value={bookingRate} suffix="%" /> : "None"} denom={`${s.booked} of ${s.sales} sales calls`} spark={<Sparkline data={cumulative(sales.map((r) => r.outcome === "booked"))} color="#059669" label={`Booking rate after each of ${sales.length} sales calls`} />} />
-        <KpiCard i={2} label="Cancels saved" help={s.retention ? `Cancellation calls where the customer stayed. ${listOf(saves)}.` : "No cancellation calls yet."} href="/calls?type=retention"
-          value={s.retention ? <><CountUp value={s.saved} /><span className="text-fg-3">/{s.retention}</span></> : "None"} denom={s.retention ? `${pct(s.saved, s.retention)}% of cancel calls` : "No cancel calls yet"} spark={saves.length > 1 ? <Sparkline data={cumulative(saves.map((r) => r.outcome === "saved"))} color="#e11d48" label="Save rate after each cancel call" /> : undefined} />
-        <KpiCard i={3} label="Average score" help="Each scored call's points as a share of its scorecard (Sales 17, Office 12, Retention 12), averaged." href="/calls?sort=score&dir=asc"
-          value={s.avgScore == null ? "None" : <CountUp value={s.avgScore} suffix="%" />} denom={`${s.gold} gold, ${s.below} below standard`} spark={<Sparkline data={ordered.map((t) => t.pct)} label={`Score per call, last ${ordered.length} calls`} />} />
-        <KpiCard i={4} label="Open revenue" help="Yearly value of unbooked sales leads and unsaved cancels, from the monthly price said on each call." href="/#todo"
-          value={<CountUp value={s.atRisk} prefix="$" />} denom="per year, still on the table" spark={<Sparkline data={revenueSeries} color="#d97706" label="Open revenue added per open item" />} />
-      </div>
 
       <div className="grid items-start gap-6 lg:grid-cols-12">
         <div className="flex min-w-0 flex-col gap-6 lg:col-span-8">
@@ -116,8 +122,8 @@ export default async function Overview({ searchParams }: { searchParams: Promise
             <h2 className="t-h3 mb-3">Framework health</h2>
             <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
               {pill.map((p, i) => (
-                <Link key={p.name} href={p.weakest ? `/calls?missed=${encodeURIComponent(p.weakest)}` : "/calls"} className="rise lift rounded-lg border border-line bg-card p-5 shadow-xs hover:border-line-strong" style={{ ["--i" as string]: i }}>
-                  <div className="flex items-center gap-3"><ScoreRing value={p.rate ?? 0} max={100} band={bandOfPct(p.rate)} size={52} label={`${p.rate ?? 0}%`} /><div><p className="t-label">{p.name}</p><p className="t-caption text-fg-3">of steps hit</p></div></div>
+                <Link key={p.name} href={p.weakest ? `/calls?missed=${encodeURIComponent(p.weakest)}` : "/calls"} className="rise lift surface flex flex-col items-start rounded-xl p-5" style={{ ["--i" as string]: i }}>
+                  <p className="t-label">{p.name}</p><div className="mt-3"><ScoreRing value={p.rate ?? 0} max={100} band={bandOfPct(p.rate)} size={96} label={`${p.rate ?? 0}%`} sub="of steps hit" /></div>
                   {p.weakest && <p className="t-small mt-4 text-fg-2">Weakest step<span className="block font-medium text-fg">{p.weakest}</span></p>}
                 </Link>
               ))}

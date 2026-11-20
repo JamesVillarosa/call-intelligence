@@ -8,7 +8,7 @@ type Point = { i: number; id: string; label: string; rep: string | null; pct: nu
 const axis = { fontSize: 12, fill: "var(--fg-3)" };
 
 function TipBox({ title, lines }: { title: string; lines: string[] }) {
-  return <div className="rounded-sm border border-line bg-elevated px-3 py-2 shadow-lg"><p className="t-label">{title}</p>{lines.map((l) => <p key={l} className="t-caption num text-fg-2">{l}</p>)}</div>;
+  return <div className="rounded-md border border-line bg-elevated px-3 py-2 shadow-lg"><p className="t-label">{title}</p>{lines.map((l) => <p key={l} className="t-caption num text-fg-2">{l}</p>)}</div>;
 }
 
 // Score per call in the order analyzed. Calls have no call date, so the x-axis says "call", not a date.
@@ -24,14 +24,14 @@ export function ScoreTrend({ points, reps }: { points: Point[]; reps: string[] }
       <div className="h-60" role="img" aria-label={`Score per call for ${rep}, ${data.length} calls`}>
         <ResponsiveContainer>
           <AreaChart data={data} margin={{ top: 12, right: 56, bottom: 20, left: -16 }} onClick={(e) => { const id = (e as { activePayload?: { payload: Point }[] })?.activePayload?.[0]?.payload.id; if (id) router.push(`/calls/${id}`); }}>
-            <defs><linearGradient id="trendFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#4f46e5" stopOpacity={0.14} /><stop offset="1" stopColor="#4f46e5" stopOpacity={0} /></linearGradient></defs>
-            <CartesianGrid vertical={false} stroke="var(--border)" strokeOpacity={0.6} />
+            <defs><linearGradient id="trendFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="var(--chart-1)" stopOpacity={0.45} /><stop offset="1" stopColor="var(--chart-2)" stopOpacity={0} /></linearGradient><linearGradient id="trendLine" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="var(--chart-3)" /><stop offset=".5" stopColor="var(--chart-1)" /><stop offset="1" stopColor="var(--chart-2)" /></linearGradient></defs>
+            <CartesianGrid vertical={false} stroke="var(--border)" strokeDasharray="3 6" />
             <XAxis dataKey="n" tick={axis} tickLine={false} axisLine={false} label={{ value: "Calls, in order analyzed", position: "insideBottom", offset: -14, style: { ...axis } }} />
             <YAxis domain={[0, 100]} ticks={[0, 25, 50, 75, 100]} tick={axis} tickLine={false} axisLine={false} unit="%" />
-            <ReferenceLine y={92} stroke="#059669" strokeDasharray="4 4" label={{ value: "Green", position: "right", fill: "#047857", fontSize: 12 }} />
-            <ReferenceLine y={100} stroke="#ca8a04" strokeDasharray="4 4" label={{ value: "Gold", position: "right", fill: "#a16207", fontSize: 12 }} />
+            <ReferenceLine y={92} stroke="var(--band-green)" strokeDasharray="4 4" label={{ value: "Green", position: "right", fill: "var(--success-fg)", fontSize: 12 }} />
+            <ReferenceLine y={100} stroke="var(--band-gold)" strokeDasharray="4 4" label={{ value: "Gold", position: "right", fill: "var(--gold-fg)", fontSize: 12 }} />
             <Tooltip cursor={{ stroke: "var(--border-strong)" }} content={({ active, payload }) => active && payload?.[0] ? <TipBox title={`${(payload[0].payload as Point).label}`} lines={[`${(payload[0].payload as Point).pct}%`, (payload[0].payload as Point).rep ?? "Unknown rep", "Click to open"]} /> : null} />
-            <Area type="linear" dataKey="pct" stroke="#4f46e5" strokeWidth={2} fill="url(#trendFill)" dot={{ r: 3, fill: "#4f46e5", strokeWidth: 0 }} activeDot={{ r: 5, cursor: "pointer" }} isAnimationActive={false} />
+            <Area type="monotone" dataKey="pct" stroke="url(#trendLine)" strokeWidth={3} fill="url(#trendFill)" dot={{ r: 3.5, fill: "var(--card)", stroke: "var(--chart-1)", strokeWidth: 2 }} activeDot={{ r: 6, fill: "var(--chart-1)", stroke: "var(--card)", strokeWidth: 3, cursor: "pointer" }} isAnimationActive={false} />
           </AreaChart>
         </ResponsiveContainer>
       </div>
@@ -40,8 +40,8 @@ export function ScoreTrend({ points, reps }: { points: Point[]; reps: string[] }
   );
 }
 
-// Call types are categories, not meanings, so they share one indigo-to-slate ramp.
-const MIX = ["#4f46e5", "#818cf8", "#c7cdfe", "#64748b", "#94a3b8", "#cbd5e1"];
+// Call types are categories, not meanings: one brand-led categorical set.
+const MIX = ["var(--chart-1)", "var(--chart-2)", "var(--chart-3)", "var(--chart-4)", "var(--chart-5)", "var(--chart-6)"];
 export function CallMix({ mix, labels }: { mix: [string, number][]; labels: Record<string, string> }) {
   const router = useRouter();
   const total = mix.reduce((n, [, c]) => n + c, 0);
@@ -59,7 +59,7 @@ export function CallMix({ mix, labels }: { mix: [string, number][]; labels: Reco
       </div>
       <ul className="w-full flex-1">
         {data.map((d, i) => (
-          <li key={d.k}><button onClick={() => router.push(`/calls?type=${d.k}`)} className="t-small flex h-9 w-full items-center gap-2.5 rounded-sm px-2 hover:bg-inset">
+          <li key={d.k}><button onClick={() => router.push(`/calls?type=${d.k}`)} className="t-small flex h-9 w-full items-center gap-2.5 rounded-full px-3 hover:bg-inset">
             <span className="size-2.5 rounded-full" style={{ background: MIX[i % MIX.length] }} /><span className="flex-1 text-left">{d.name}</span>
             <span className="num font-medium">{d.v}</span><span className="num w-10 text-right text-fg-3">{Math.round((d.v / total) * 100)}%</span>
           </button></li>

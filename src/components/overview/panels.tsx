@@ -54,8 +54,9 @@ export function CoachCard({ step, missed, total, say, clip, bestHref }: { step: 
   const msg = `Team, this week's focus is ${step}. We missed it on ${missed} of ${total} calls.${say ? `\n\nTry this on every call:\n"${say}"` : ""}\n\nI'll listen for it on Monday.`;
   const [text, setText] = useState(msg);
   return (
-    <div className="rounded-lg border border-line bg-card shadow-xs">
-      <div className="p-5 sm:p-6">
+    <div className="surface relative overflow-hidden rounded-xl">
+      <span aria-hidden className="pointer-events-none absolute -right-16 -top-16 size-48 rounded-full bg-brand-500/20 blur-3xl" />
+      <div className="relative p-5 sm:p-6">
         <h3 className="t-h3">Coach this week</h3>
         <p className="t-body mt-1 font-medium text-brand-fg">{step}</p>
         <p className="t-small mt-0.5 text-fg-2">{missedOn(missed, total).replace(/^m/, "M")}</p>
@@ -68,7 +69,7 @@ export function CoachCard({ step, missed, total, say, clip, bestHref }: { step: 
       </div>
       <Dialog open={open} onOpenChange={setOpen} title="Send this week's focus" description="No messaging integration is connected yet, so copy this into your team chat or text thread."
         footer={<><Button onClick={() => setOpen(false)}>Cancel</Button><Button variant="primary" onClick={async () => { await navigator.clipboard.writeText(text); toast.success("Message copied"); setOpen(false); }}><Copy />Copy message</Button></>}>
-        <textarea value={text} onChange={(e) => setText(e.target.value)} rows={8} aria-label="Message" className="t-small w-full rounded-sm border border-line bg-card p-3 outline-none focus:border-brand-500 focus:shadow-[var(--ring)]" />
+        <textarea value={text} onChange={(e) => setText(e.target.value)} rows={8} aria-label="Message" className="t-small w-full rounded-md border border-line bg-card p-3 outline-none focus:border-brand-500 focus:shadow-[var(--ring)]" />
       </Dialog>
     </div>
   );
@@ -76,8 +77,8 @@ export function CoachCard({ step, missed, total, say, clip, bestHref }: { step: 
 
 // Steps as rows, reps as columns. One single-hue scale (white to rose) by miss rate; n/N in every cell.
 const SCALE = [
-  { max: 0, bg: "#ffffff", fg: "text-fg-2" }, { max: 0.25, bg: "#ffe4e6", fg: "text-fg" }, { max: 0.5, bg: "#fecdd3", fg: "text-fg" },
-  { max: 0.75, bg: "#fb7185", fg: "text-n-900" }, { max: 1, bg: "#e11d48", fg: "text-white" },
+  { max: 0, bg: "var(--heat-0)", fg: "text-fg-2" }, { max: 0.25, bg: "var(--heat-1)", fg: "text-fg" }, { max: 0.5, bg: "var(--heat-2)", fg: "text-fg" },
+  { max: 0.75, bg: "var(--heat-3)", fg: "text-fg" }, { max: 1, bg: "var(--heat-4)", fg: "text-white" },
 ];
 const tone = (r: number) => SCALE.find((x) => r <= x.max) ?? SCALE[SCALE.length - 1];
 
@@ -101,12 +102,12 @@ export function Heatmap({ reps, steps: allSteps, cells }: { reps: string[]; step
                 <th scope="row" className="t-small pr-3 text-left font-medium">{step}</th>
                 {reps.map((rep, ri) => {
                   const c = cells[ri][allSteps.indexOf(step)];
-                  if (!c.of) return <td key={rep} className="t-small h-10 rounded-xs bg-inset text-center text-fg-3" aria-label={`${rep}, ${step}: no calls`}>-</td>;
+                  if (!c.of) return <td key={rep} className="t-small h-10 text-center text-fg-3" aria-label={`${rep}, ${step}: no calls`}>-</td>;
                   const t = tone(c.rate ?? 0), small = c.of === 1;
                   return (
                     <td key={rep} className="p-0">
                       <Link href={`/calls?${new URLSearchParams({ ...(rep !== "Unknown" && { rep }), missed: step })}`} title={`${rep}, ${step}: missed on ${c.miss} of ${c.of} call${c.of > 1 ? "s" : ""}${small ? " (small sample)" : ""}`}
-                        className={cn("num t-label grid h-10 place-items-center rounded-xs ring-1 ring-inset transition-transform hover:scale-105 focus-visible:scale-105", small ? "border border-dashed border-line-strong text-fg-2 ring-transparent" : cn("ring-line", t.fg))} style={{ backgroundColor: small ? "var(--card)" : t.bg }}>
+                        className={cn("num t-label grid h-10 place-items-center rounded-sm ring-1 ring-inset transition-transform hover:scale-105 focus-visible:scale-105", small ? "border border-dashed border-line-strong text-fg-2 ring-transparent" : cn("ring-line", t.fg))} style={{ backgroundColor: small ? "var(--card)" : t.bg }}>
                         {c.miss}/{c.of}
                       </Link>
                     </td>
@@ -135,14 +136,14 @@ export function BreakdownBars({ rows }: { rows: { label: string; missed: number;
         const rate = Math.round((r.missed / r.total) * 100);
         return (
           <li key={r.label}>
-            <Link href={`/calls?missed=${encodeURIComponent(r.label)}`} className={cn("rise block rounded-md px-3 py-2.5 transition-colors hover:bg-inset", i === 0 && "bg-orange-soft hover:bg-orange-soft")} style={{ ["--i" as string]: i }}>
+            <Link href={`/calls?missed=${encodeURIComponent(r.label)}`} className={cn("rise block rounded-md px-3 py-2.5 transition-colors hover:bg-inset", i === 0 && "font-semibold")} style={{ ["--i" as string]: i }}>
               <span className="flex items-center gap-2.5">
                 <span className="num t-caption w-4 text-fg-3">{i + 1}</span>
                 <span className={cn("t-small flex-1", i === 0 && "font-semibold")}>{r.label}</span>
                 <span className="num t-caption text-fg-2">{r.missed} of {plural(r.total, "call")}</span>
               </span>
-              <span className="ml-6.5 mt-2 block h-2 overflow-hidden rounded-full bg-inset">
-                <span className="grow block h-full rounded-full" style={{ width: `${Math.max(rate, 3)}%`, background: i === 0 ? "#c2410c" : "#a5b0fc", ["--i" as string]: i }} />
+              <span className="ml-6.5 mt-2 block h-1.5 overflow-hidden rounded-full bg-inset">
+                <span className="grow block h-full rounded-full" style={{ width: `${Math.max(rate, 3)}%`, background: i === 0 ? "linear-gradient(90deg, var(--band-close), var(--band-critical))" : "var(--grad-brand)", ["--i" as string]: i }} />
               </span>
             </Link>
           </li>
