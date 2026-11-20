@@ -1,15 +1,20 @@
+import { useId } from "react";
+
 type Variant = "mark" | "tile" | "full" | "mono" | "stacked";
 
-// The mark: a geometric "Ci" monogram on a flat blue tile. Flat on purpose so it holds up at 16px and in one color.
+// The mark: an open "C" (the call) in a cyan-to-violet gradient, with the AI spark sitting in its opening.
 export function LogoMark({ size = 32, tone = "color" }: { size?: number; tone?: "color" | "white" | "dark" }) {
-  const tile = tone === "color" ? "#0b5cff" : tone === "white" ? "#ffffff" : "#0f1535";
-  const ink = tone === "white" ? "#0b5cff" : "#ffffff";
+  const id = useId().replace(/:/g, "");
+  const solid = tone === "white" ? "#ffffff" : tone === "dark" ? "#0f1535" : null;
   return (
     <svg width={size} height={size} viewBox="0 0 32 32" aria-hidden className="shrink-0">
-      <rect width="32" height="32" rx="8" fill={tile} />
-      <path d="M17.9 11.2A7 7 0 1 0 17.9 20.8" fill="none" stroke={ink} strokeWidth="3.4" strokeLinecap="round" />
-      <rect x="20.6" y="14" width="3.4" height="9.4" rx="1.7" fill={ink} />
-      <circle cx="22.3" cy="9.6" r="2.1" fill={ink} />
+      <defs>
+        <linearGradient id={`a${id}`} x1="8" y1="5" x2="16" y2="28" gradientUnits="userSpaceOnUse"><stop stopColor="#21d4fd" /><stop offset=".5" stopColor="#0075ff" /><stop offset="1" stopColor="#7551ff" /></linearGradient>
+        <linearGradient id={`b${id}`} x1="20" y1="9" x2="30" y2="22" gradientUnits="userSpaceOnUse"><stop stopColor="#a48bff" /><stop offset="1" stopColor="#0075ff" /></linearGradient>
+      </defs>
+      <path d="M21.66 9.57A10 10 0 1 0 21.66 22.43" fill="none" stroke={solid ?? `url(#a${id})`} strokeWidth="4.2" strokeLinecap="round" />
+      <path d="M24.5 10.8Q25.23 15.27 29.7 16Q25.23 16.73 24.5 21.2Q23.77 16.73 19.3 16Q23.77 15.27 24.5 10.8Z" fill={solid ?? `url(#b${id})`} />
+      <path d="M28.4 5.0Q28.669999999999998 6.630000000000001 30.299999999999997 6.9Q28.669999999999998 7.17 28.4 8.8Q28.13 7.17 26.5 6.9Q28.13 6.630000000000001 28.4 5.0Z" fill={solid ?? "#21d4fd"} />
     </svg>
   );
 }
